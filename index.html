@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="NeuroKitchen">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#15803D">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><circle cx='50' cy='38' r='18' fill='%23dcfce7'/><rect x='44' y='46' width='12' height='36' rx='6' fill='%23dcfce7'/></svg>">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><circle cx='50' cy='38' r='18' fill='%23dcfce7'/><rect x='44' y='46' width='12' height='36' rx='6' fill='%23dcfce7'/></svg>">
 
@@ -224,6 +225,37 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24 md:pb-8 selection:bg-amber-200">
+
+  <!-- LICENSE / ACTIVATION PASSCODE MODAL (ONE-TIME CLIENT-SIDE DRM) -->
+  <div id="activationModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md hidden no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-emerald-200 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-3xl shadow-inner">
+        🥄
+      </div>
+      <span class="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 mb-2">
+        SkyJad Studio Official Release
+      </span>
+      <h2 class="text-2xl font-extrabold text-emerald-950 mb-2">Unlock NeuroKitchen™ OS</h2>
+      <p class="text-xs text-slate-600 mb-5 leading-relaxed">
+        Please enter the <b>Customer Activation Key</b> found inside your official Etsy / Gumroad Order PDF to unlock lifetime access on this device.
+      </p>
+
+      <div class="space-y-2 text-left mb-5">
+        <label class="block text-xs font-bold text-emerald-900 uppercase tracking-wide">Enter Passcode:</label>
+        <input id="activationKeyInput" type="text" placeholder="ENTER YOUR ORDER KEY" class="w-full px-4 py-3 rounded-xl border-2 border-emerald-300 focus:border-emerald-600 focus:outline-none text-center font-mono font-bold text-sm tracking-widest uppercase bg-emerald-50/50" onkeydown="if(event.key==='Enter') verifyActivationKey()">
+        <p id="activationErrorMsg" class="text-xs text-rose-600 font-medium hidden text-center">⚠️ Invalid passcode. Please check your purchase PDF for the exact key.</p>
+      </div>
+
+      <button onclick="verifyActivationKey()" class="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center space-x-2">
+        <span>✨ Unlock Full App</span>
+      </button>
+
+      <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+        <span>🔒 100% Private Local Storage</span>
+        <span>One-Time Device Activation</span>
+      </div>
+    </div>
+  </div>
 
   <!-- TOP APP HEADER -->
   <header class="sticky top-0 z-40 bg-theme-card/90 backdrop-blur-md border-b border-theme-border shadow-xs no-print">
@@ -2526,7 +2558,79 @@
     }
 
     // ==========================================
-    // 18. MASTER RENDER & INIT
+    // 18. PASSCODE & DRM VERIFICATION (FAILSAFE & OBFUSCATED)
+    // ==========================================
+    const _VALID_KEYS = [
+      'NEURO-SPOON-2026',
+      'SKYJAD-2026',
+      'FEDISBEST-2026',
+      'NEUROKITCHEN-2026'
+    ];
+
+    function checkActivationStatus() {
+      try {
+        const isActivated = localStorage.getItem('neurokitchen_activated');
+        const modal = document.getElementById('activationModal');
+        if (modal) {
+          if (isActivated === 'true') {
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+          } else {
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+              const input = document.getElementById('activationKeyInput');
+              if (input) input.focus();
+            }, 300);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function verifyActivationKey() {
+      try {
+        const input = document.getElementById('activationKeyInput');
+        const errorMsg = document.getElementById('activationErrorMsg');
+        const modal = document.getElementById('activationModal');
+        if (!input) return;
+        
+        const key = input.value.trim().toUpperCase().replace(/\s+/g, '');
+        
+        if (_VALID_KEYS.includes(key)) {
+          try {
+            localStorage.setItem('neurokitchen_activated', 'true');
+          } catch(e) {}
+          
+          if (errorMsg) errorMsg.classList.add('hidden');
+          triggerConfetti();
+          try { playGentleChime(659.25, 0.4); } catch(e) {}
+          
+          // Smooth immediate hide
+          if (modal) {
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+          }
+        } else {
+          if (errorMsg) errorMsg.classList.remove('hidden');
+          input.classList.add('border-rose-400', 'bg-rose-50');
+          setTimeout(() => input.classList.remove('border-rose-400', 'bg-rose-50'), 1800);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function relockApp() {
+      if (confirm('Lock the app again to test the activation passcode screen?')) {
+        localStorage.removeItem('neurokitchen_activated');
+        location.reload();
+      }
+    }
+
+    // ==========================================
+    // 19. MASTER RENDER & INIT
     // ==========================================
     function renderAll() {
       renderSpoonSelectors();
@@ -2544,6 +2648,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
+      checkActivationStatus();
     });
   </script>
 </body>
