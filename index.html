@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en" class="light" data-theme="matcha">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NeuroKitchen™ OS — ADHD Low-Spoon Meal Planner & Kitchen Assistant</title>
+  <meta name="description" content="The ultimate overwhelm-free meal planner, dopamine recipe vault, and step-by-step focus cooking assistant for ADHD & neurodivergent brains.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="NeuroKitchen">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#15803D">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><circle cx='50' cy='38' r='18' fill='%23dcfce7'/><rect x='44' y='46' width='12' height='36' rx='6' fill='%23dcfce7'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><circle cx='50' cy='38' r='18' fill='%23dcfce7'/><rect x='44' y='46' width='12' height='36' rx='6' fill='%23dcfce7'/></svg>">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            theme: {
+              bg: 'var(--color-bg)',
+              card: 'var(--color-card)',
+              cardSub: 'var(--color-card-sub)',
+              border: 'var(--color-border)',
+              accent: 'var(--color-accent)',
+              accentHover: 'var(--color-accent-hover)',
+              accentLight: 'var(--color-accent-light)',
+              text: 'var(--color-text)',
+              textMuted: 'var(--color-text-muted)',
+              badge: 'var(--color-badge)',
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Lucide Icons & Canvas Confetti -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      /* Theme 1: Honey Butter (Warm & Cheerful) */
+      --color-bg: #FFFDF0;
+      --color-card: #FFFFFF;
+      --color-card-sub: #FEF9C3;
+      --color-border: #FDE047;
+      --color-accent: #D97706;
+      --color-accent-hover: #B45309;
+      --color-accent-light: #FEF3C7;
+      --color-text: #451A03;
+      --color-text-muted: #92400E;
+      --color-badge: #F59E0B;
+    }
+
+    [data-theme="matcha"] {
+      /* Theme 2: Matcha Sage (Calming & Grounded) */
+      --color-bg: #F4FBF7;
+      --color-card: #FFFFFF;
+      --color-card-sub: #DCFCE7;
+      --color-border: #86EFAC;
+      --color-accent: #15803D;
+      --color-accent-hover: #166534;
+      --color-accent-light: #F0FDF4;
+      --color-text: #052E16;
+      --color-text-muted: #166534;
+      --color-badge: #22C55E;
+    }
+
+    [data-theme="lavender"] {
+      /* Theme 3: Lavender Cloud (Sensory Soothing) */
+      --color-bg: #FAF7FD;
+      --color-card: #FFFFFF;
+      --color-card-sub: #F3E8FF;
+      --color-border: #D8B4FE;
+      --color-accent: #7E22CE;
+      --color-accent-hover: #6B21A8;
+      --color-accent-light: #FAF5FF;
+      --color-text: #3B0764;
+      --color-text-muted: #7E22CE;
+      --color-badge: #A855F7;
+    }
+
+    [data-theme="peach"] {
+      /* Theme 4: Warm Peach Oat (Cozy & Energizing) */
+      --color-bg: #FFF8F5;
+      --color-card: #FFFFFF;
+      --color-card-sub: #FFEDD5;
+      --color-border: #FDBA74;
+      --color-accent: #C2410C;
+      --color-accent-hover: #9A3412;
+      --color-accent-light: #FFF7ED;
+      --color-text: #431407;
+      --color-text-muted: #9A3412;
+      --color-badge: #F97316;
+    }
+
+    [data-theme="nordic"] {
+      /* Theme 5: Nordic Sky (Cool & Clear Focus) */
+      --color-bg: #F0F9FF;
+      --color-card: #FFFFFF;
+      --color-card-sub: #E0F2FE;
+      --color-border: #BAE6FD;
+      --color-accent: #0284C7;
+      --color-accent-hover: #0369A1;
+      --color-accent-light: #F0F9FF;
+      --color-text: #082F49;
+      --color-text-muted: #0369A1;
+      --color-badge: #38BDF8;
+    }
+
+    [data-theme="sand"] {
+      /* Theme 6: Warm Sand (Minimal & Organic) */
+      --color-bg: #FBF9F5;
+      --color-card: #FFFFFF;
+      --color-card-sub: #F5EBE1;
+      --color-border: #E6D5C3;
+      --color-accent: #8C6239;
+      --color-accent-hover: #6B4926;
+      --color-accent-light: #FAF4ED;
+      --color-text: #2C2117;
+      --color-text-muted: #70543D;
+      --color-badge: #A8835C;
+    }
+
+    [data-theme="dark"] {
+      /* Theme 7: OLED Night Mode (Low Stimulation) */
+      --color-bg: #0F172A;
+      --color-card: #1E293B;
+      --color-card-sub: #334155;
+      --color-border: #475569;
+      --color-accent: #38BDF8;
+      --color-accent-hover: #7DD3FC;
+      --color-accent-light: #1E293B;
+      --color-text: #F8FAFC;
+      --color-text-muted: #94A3B8;
+      --color-badge: #0EA5E9;
+    }
+
+    [data-theme="high_contrast"] {
+      /* Theme 8: High Contrast Black & White */
+      --color-bg: #FFFFFF;
+      --color-card: #FFFFFF;
+      --color-card-sub: #F4F4F5;
+      --color-border: #000000;
+      --color-accent: #000000;
+      --color-accent-hover: #27272A;
+      --color-accent-light: #F4F4F5;
+      --color-text: #000000;
+      --color-text-muted: #52525B;
+      --color-badge: #000000;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      transition: background-color 0.25s ease, color 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Custom smooth scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(140, 140, 140, 0.25);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(140, 140, 140, 0.45);
+    }
+
+    /* Tactile button animations */
+    .btn-tactile {
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+    }
+    .btn-tactile:active {
+      transform: scale(0.96);
+    }
+
+    @keyframes pulseGently {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    .pulse-gentle {
+      animation: pulseGently 2.5s infinite ease-in-out;
+    }
+
+    /* Wheel spinner animation */
+    @keyframes spinWheel {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(1440deg); }
+    }
+    .spinning {
+      animation: spinWheel 2.5s cubic-bezier(0.15, 0.9, 0.2, 1) forwards;
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .print-page { page-break-after: always; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col pb-24 md:pb-8 selection:bg-amber-200">
+
+  <!-- TOP APP HEADER -->
+  <header class="sticky top-0 z-40 bg-theme-card/90 backdrop-blur-md border-b border-theme-border shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Tagline -->
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-xl bg-theme-accent text-white flex items-center justify-center shadow-sm text-xl font-bold">
+          🥄
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-extrabold text-base sm:text-lg tracking-tight text-theme-text">NeuroKitchen<span class="text-theme-accent font-mono text-sm sm:text-base font-bold">OS</span></h1>
+            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-theme-cardSub text-theme-textMuted border border-theme-border">
+              ADHD Friendly • No Guilt
+            </span>
+          </div>
+          <p class="text-[11px] text-theme-textMuted hidden sm:block">Low-Spoon Meal Planner & Executive Function Kitchen Assistant</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions Header -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        
+        <!-- Panic Emergency Food Button -->
+        <button onclick="openPanicWheel()" class="btn-tactile flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold shadow-sm pulse-gentle">
+          <span class="text-sm">🎲</span>
+          <span class="hidden sm:inline">Decide For Me!</span>
+          <span class="sm:hidden">Panic Food</span>
+        </button>
+
+        <!-- Quick Add Meal Modal Button -->
+        <button onclick="openAddMealModal()" class="btn-tactile flex items-center space-x-1 px-3 py-1.5 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold shadow-sm">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Add Recipe</span>
+        </button>
+
+        <!-- Audio Mute/Unmute Toggle -->
+        <button onclick="toggleAudio()" id="audioToggleBtn" title="Toggle Dopamine Audio Chimes" class="p-2 rounded-xl bg-theme-cardSub border border-theme-border text-theme-text hover:bg-theme-border transition">
+          <i data-lucide="volume-2" id="audioIcon" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Quick Theme Selector Dropdown -->
+        <div class="relative">
+          <select id="headerThemeSelector" onchange="changeTheme(this.value)" class="bg-theme-cardSub border border-theme-border text-theme-text text-xs font-bold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer">
+            <option value="honey">🍯 Honey Butter</option>
+            <option value="matcha">🍵 Matcha Sage</option>
+            <option value="lavender">💜 Lavender Cloud</option>
+            <option value="peach">🍑 Warm Peach</option>
+            <option value="nordic">❄️ Nordic Sky</option>
+            <option value="sand">🌾 Warm Sand</option>
+            <option value="dark">🌙 Dark Mode</option>
+            <option value="high_contrast">⚡ High Contrast</option>
+          </select>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN BODY LAYOUT -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 flex-1 w-full grid grid-cols-1 md:grid-cols-12 gap-6">
+
+    <!-- DESKTOP SIDEBAR NAVIGATION (Hidden on Mobile) -->
+    <aside class="hidden md:block md:col-span-3 lg:col-span-3 space-y-4 no-print">
+      
+      <!-- User Energy / Spoon Capacity Box -->
+      <div class="bg-theme-card p-4 rounded-2xl border border-theme-border shadow-xs space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-theme-textMuted flex items-center">
+            <i data-lucide="battery-charging" class="w-4 h-4 mr-1.5 text-theme-accent"></i> My Energy Level
+          </span>
+          <span id="spoonEnergyLabel" class="text-xs font-bold px-2 py-0.5 rounded-md bg-theme-cardSub text-theme-text border border-theme-border">3 Spoons</span>
+        </div>
+
+        <p class="text-[11px] text-theme-textMuted leading-relaxed">How many spoons (energy) do you have right now?</p>
+
+        <!-- Interactive 5-Spoon Capacity Selector -->
+        <div class="grid grid-cols-5 gap-1.5 py-1" id="spoonSelectorButtons">
+          <!-- 1 to 5 spoon buttons dynamically generated -->
+        </div>
+
+        <div id="spoonAdviceBox" class="p-2.5 rounded-xl bg-theme-cardSub border border-theme-border text-[11px] text-theme-text font-medium flex items-center space-x-2">
+          <span class="text-base">🥄</span>
+          <span id="spoonAdviceText">Moderate energy: 10-15 min one-pan meals or sheet pan dinners.</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="bg-theme-card p-2 rounded-2xl border border-theme-border shadow-xs space-y-1">
+        <button onclick="switchTab('today')" id="tabBtn-today" class="nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-theme-cardSub text-theme-accent border border-theme-border">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          <span>Today • What Now?</span>
+        </button>
+
+        <button onclick="switchTab('safe_foods')" id="tabBtn-safe_foods" class="nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-theme-text hover:bg-theme-cardSub">
+          <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i>
+          <span>Safe Foods & Comfort Vault</span>
+        </button>
+
+        <button onclick="switchTab('weekly_plan')" id="tabBtn-weekly_plan" class="nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-theme-text hover:bg-theme-cardSub">
+          <i data-lucide="calendar" class="w-4 h-4 text-amber-600"></i>
+          <span>Low-Spoon Weekly Plan</span>
+        </button>
+
+        <button onclick="switchTab('pantry')" id="tabBtn-pantry" class="nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-theme-text hover:bg-theme-cardSub">
+          <i data-lucide="package" class="w-4 h-4 text-emerald-600"></i>
+          <span>Pantry & "What Can I Cook?"</span>
+        </button>
+
+        <button onclick="switchTab('grocery')" id="tabBtn-grocery" class="nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-theme-text hover:bg-theme-cardSub">
+          <i data-lucide="shopping-cart" class="w-4 h-4 text-blue-600"></i>
+          <span>Smart Aisle Grocery List</span>
+        </button>
+
+        <button onclick="switchTab('settings')" id="tabBtn-settings" class="nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-theme-text hover:bg-theme-cardSub">
+          <i data-lucide="settings" class="w-4 h-4 text-slate-500"></i>
+          <span>Settings, Themes & Backup</span>
+        </button>
+      </nav>
+
+      <!-- Dopamine Water & Self Care Tracker -->
+      <div class="bg-theme-card p-4 rounded-2xl border border-theme-border shadow-xs space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-theme-textMuted flex items-center">
+            <i data-lucide="droplet" class="w-3.5 h-3.5 mr-1 text-cyan-500"></i> Hydration Check
+          </span>
+          <span id="waterCountDisplay" class="text-xs font-mono font-bold text-cyan-700">0 / 8 Glasses</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2" id="waterGlassesContainer">
+          <!-- 8 Water Glasses -->
+        </div>
+        <p class="text-[10px] text-center text-theme-textMuted italic">"Water counts. Fed is best. You are doing great."</p>
+      </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT VIEW AREA (Tabs) -->
+    <main class="col-span-1 md:col-span-9 lg:col-span-9 space-y-6">
+
+      <!-- MOBILE SPOON SELECTOR (Visible only on Mobile) -->
+      <div class="block md:hidden bg-theme-card p-3.5 rounded-2xl border border-theme-border shadow-xs space-y-2 no-print">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+            🥄 Spoons Right Now:
+          </span>
+          <span id="mobileSpoonLabel" class="text-xs font-bold px-2 py-0.5 rounded-md bg-theme-cardSub text-theme-text">3 Spoons</span>
+        </div>
+        <div class="grid grid-cols-5 gap-1.5" id="mobileSpoonButtons">
+          <!-- Mobile spoon buttons -->
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 1: TODAY • WHAT NOW? (COMMAND CENTER) -->
+      <!-- ========================================== -->
+      <section id="view-today" class="tab-view space-y-6">
+        
+        <!-- Welcome / Affirmation Banner -->
+        <div class="bg-gradient-to-r from-theme-card via-theme-cardSub to-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-theme-text flex items-center">
+              <span>Today • What Now?</span>
+              <span class="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">No Overwhelm</span>
+            </h2>
+            <p class="text-xs text-theme-textMuted mt-0.5">You don't have to do it all. Just pick what matches your spoons right now.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="openPanicWheel()" class="btn-tactile px-3 py-1.5 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm">
+              <span>🎲</span>
+              <span>Spin Decision Wheel</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 1: Meals Matching Your Spoons -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+              <i data-lucide="sparkles" class="w-4 h-4 mr-1.5 text-theme-accent"></i>
+              Meals Matched to <span id="currentSpoonTitle" class="ml-1 text-theme-accent">3 Spoons</span>
+            </h3>
+            <span class="text-[11px] text-theme-textMuted font-medium">Auto-filtered</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5" id="energyMatchedMealsGrid">
+            <!-- Dynamically populated meals matching spoons -->
+          </div>
+        </div>
+
+        <!-- Section 2: Two Column Dashboard (Dopamine Tasks & Emergency Safe Foods) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          
+          <!-- Column A: Today's Micro Dopamine Tasks -->
+          <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-theme-border pb-2.5">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+                <i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5 text-emerald-600"></i>
+                Check-Off For Dopamine
+              </h3>
+              <span id="tasksCompletedPill" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">0 Done</span>
+            </div>
+
+            <!-- Task List -->
+            <div class="space-y-2" id="dopamineTaskList">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Add Task Input -->
+            <form onsubmit="addDopamineTask(event)" class="flex items-center space-x-2 pt-1">
+              <input type="text" id="newTaskInput" placeholder="Add micro-task (e.g., Eat 1 fruit, Drink water)..." class="flex-1 bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-xs text-theme-text placeholder-theme-textMuted focus:outline-none font-medium">
+              <button type="submit" class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold">Add</button>
+            </form>
+          </div>
+
+          <!-- Column B: Emergency 1-Spoon Zero-Decision Meals -->
+          <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-theme-border pb-2.5">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+                <i data-lucide="alert-triangle" class="w-4 h-4 mr-1.5 text-rose-500"></i>
+                Emergency 1-Spoon Safe Foods
+              </h3>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200">Zero Guilt</span>
+            </div>
+
+            <div class="space-y-2.5" id="emergencyMealsList">
+              <!-- Dynamically populated emergency 1-spoon cards -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Section 3: Anti-Waste Pantry Alert & Grocery Snippet -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          
+          <!-- Expiring Soon Tracker -->
+          <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-3">
+            <div class="flex items-center justify-between border-b border-theme-border pb-2">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+                <i data-lucide="hourglass" class="w-4 h-4 mr-1.5 text-amber-600"></i>
+                Eat Me First! (Expiring Soon)
+              </h3>
+              <button onclick="switchTab('pantry')" class="text-xs text-theme-accent hover:underline font-bold">View All &rarr;</button>
+            </div>
+            <div class="space-y-2" id="expiringPantryPreview">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Quick Grocery List Preview -->
+          <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-3">
+            <div class="flex items-center justify-between border-b border-theme-border pb-2">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+                <i data-lucide="shopping-bag" class="w-4 h-4 mr-1.5 text-blue-600"></i>
+                Quick Grocery Checklist
+              </h3>
+              <button onclick="switchTab('grocery')" class="text-xs text-theme-accent hover:underline font-bold">Full List &rarr;</button>
+            </div>
+            <div class="space-y-1.5" id="quickGroceryPreview">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: SAFE FOODS & COMFORT VAULT -->
+      <!-- ========================================== -->
+      <section id="view-safe_foods" class="tab-view hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-theme-text flex items-center">
+              <i data-lucide="heart" class="w-5 h-5 mr-2 text-rose-500"></i>
+              Safe Foods & Dopamine Menu
+            </h2>
+            <p class="text-xs text-theme-textMuted mt-0.5">Reliable comfort meals that never cause sensory overload when appetite is low.</p>
+          </div>
+          <button onclick="openAddMealModal()" class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Add Safe Food</span>
+          </button>
+        </div>
+
+        <!-- Sensory Tag Filter Bar -->
+        <div class="flex items-center space-x-2 overflow-x-auto pb-1" id="sensoryFilterContainer">
+          <button onclick="filterSafeFoods('all')" class="sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-cardSub text-theme-accent border border-theme-border">All Foods</button>
+          <button onclick="filterSafeFoods('crunchy')" class="sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-card text-theme-text hover:bg-theme-cardSub border border-theme-border">🥨 Crunchy</button>
+          <button onclick="filterSafeFoods('warm')" class="sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-card text-theme-text hover:bg-theme-cardSub border border-theme-border">🍲 Warm & Cheesy</button>
+          <button onclick="filterSafeFoods('protein')" class="sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-card text-theme-text hover:bg-theme-cardSub border border-theme-border">🍗 High-Protein</button>
+          <button onclick="filterSafeFoods('sweet')" class="sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-card text-theme-text hover:bg-theme-cardSub border border-theme-border">🍓 Sweet Dopamine</button>
+          <button onclick="filterSafeFoods('cold')" class="sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-card text-theme-text hover:bg-theme-cardSub border border-theme-border">🥪 Cold & Fresh</button>
+        </div>
+
+        <!-- Safe Foods Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="safeFoodsGrid">
+          <!-- Dynamically populated -->
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: LOW-SPOON WEEKLY MEAL BOARD -->
+      <!-- ========================================== -->
+      <section id="view-weekly_plan" class="tab-view hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-theme-text flex items-center">
+              <i data-lucide="calendar" class="w-5 h-5 mr-2 text-amber-600"></i>
+              Low-Spoon Weekly Meal Board
+            </h2>
+            <p class="text-xs text-theme-textMuted mt-0.5">Flexible 7-day flow. 5 ingredients or fewer per meal. No guilt if you swap days!</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="randomizeWeeklyPlan()" class="btn-tactile px-3 py-1.5 rounded-xl bg-theme-cardSub text-theme-text border border-theme-border text-xs font-bold hover:bg-theme-border flex items-center space-x-1">
+              <i data-lucide="shuffle" class="w-3.5 h-3.5"></i>
+              <span>Auto-Fill Plan</span>
+            </button>
+            <button onclick="printWeeklyPlan()" class="btn-tactile px-3 py-1.5 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold flex items-center space-x-1 shadow-sm">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>Print Plan</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mon - Sun Day Cards -->
+        <div class="space-y-3" id="weeklyMealDaysList">
+          <!-- Dynamically populated 7 days -->
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: PANTRY & "WHAT CAN I COOK?" -->
+      <!-- ========================================== -->
+      <section id="view-pantry" class="tab-view hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-theme-text flex items-center">
+              <i data-lucide="package" class="w-5 h-5 mr-2 text-emerald-600"></i>
+              Pantry Inventory & "Cook With What I Have"
+            </h2>
+            <p class="text-xs text-theme-textMuted mt-0.5">Select what ingredients you have in your fridge/cupboard to see what you can cook right now.</p>
+          </div>
+          <button onclick="openAddPantryModal()" class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Add Pantry Item</span>
+          </button>
+        </div>
+
+        <!-- Interactive "What Can I Make?" Matcher Box -->
+        <div class="bg-gradient-to-br from-theme-card via-theme-cardSub to-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+              <i data-lucide="chef-hat" class="w-4 h-4 mr-1.5 text-theme-accent"></i>
+              What Ingredients Do You Have Right Now?
+            </h3>
+            <button onclick="clearPantrySelections()" class="text-xs text-theme-accent hover:underline font-bold">Clear Selections</button>
+          </div>
+          
+          <div class="flex flex-wrap gap-2" id="pantryIngredientChips">
+            <!-- Clickable ingredient chips -->
+          </div>
+
+          <!-- Matched Recipes Output -->
+          <div class="pt-2 border-t border-theme-border space-y-2">
+            <p class="text-xs font-bold text-theme-text flex items-center">
+              <span>Recipes You Can Cook Right Now:</span>
+              <span id="matchedRecipeCount" class="ml-2 px-2 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">0 matched</span>
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="pantryMatchedMealsGrid">
+              <!-- Matched meals output -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Pantry Inventory Table / Grid -->
+        <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-3">
+          <div class="flex items-center justify-between border-b border-theme-border pb-2.5">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+              <i data-lucide="boxes" class="w-4 h-4 mr-1.5 text-slate-600"></i>
+              Full Pantry & Expiry Tracker
+            </h3>
+            <span class="text-[10px] text-theme-textMuted">Sorted by expiration date</span>
+          </div>
+
+          <div class="divide-y divide-theme-border" id="fullPantryList">
+            <!-- Full pantry items list -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 5: SMART AISLE GROCERY LIST -->
+      <!-- ========================================== -->
+      <section id="view-grocery" class="tab-view hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-theme-text flex items-center">
+              <i data-lucide="shopping-cart" class="w-5 h-5 mr-2 text-blue-600"></i>
+              Smart Aisle Grocery List
+            </h2>
+            <p class="text-xs text-theme-textMuted mt-0.5">Organized by store section so you don't wander in circles or get sensory overwhelm.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="clearCheckedGrocery()" class="btn-tactile px-3 py-1.5 rounded-xl bg-theme-cardSub text-theme-text border border-theme-border text-xs font-bold hover:bg-theme-border flex items-center space-x-1">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-500"></i>
+              <span>Clear Done</span>
+            </button>
+            <button onclick="printGroceryList()" class="btn-tactile px-3 py-1.5 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold flex items-center space-x-1 shadow-sm">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>Print List</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Add Grocery Item Bar -->
+        <div class="bg-theme-card p-4 rounded-2xl border border-theme-border shadow-xs">
+          <form onsubmit="addGroceryItem(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+            <input type="text" id="newGroceryName" placeholder="Item name (e.g. Cheddar Cheese, Bread, Eggs)..." required class="sm:col-span-6 bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-xs text-theme-text font-medium focus:outline-none">
+            
+            <select id="newGroceryAisle" class="sm:col-span-4 bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-xs text-theme-text font-medium focus:outline-none">
+              <option value="Produce">🥦 Fresh Produce (Fruits/Veg)</option>
+              <option value="Dairy & Eggs">🧀 Dairy & Eggs</option>
+              <option value="Bakery">🍞 Bakery & Bread</option>
+              <option value="Pantry Staples">🥫 Pantry & Canned Goods</option>
+              <option value="Frozen">❄️ Frozen & Quick Meals</option>
+              <option value="Snacks & Drinks">🥨 Snacks & Drinks</option>
+              <option value="Other">📦 Other / Household</option>
+            </select>
+
+            <button type="submit" class="sm:col-span-2 btn-tactile bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold rounded-xl py-2 shadow-sm">Add Item</button>
+          </form>
+        </div>
+
+        <!-- Grocery Aisle Sections -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="groceryAislesContainer">
+          <!-- Dynamically populated by store section -->
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 6: SETTINGS, THEMES & DATA PORTABILITY -->
+      <!-- ========================================== -->
+      <section id="view-settings" class="tab-view hidden space-y-6">
+        
+        <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs">
+          <h2 class="text-base sm:text-lg font-black text-theme-text flex items-center">
+            <i data-lucide="settings" class="w-5 h-5 mr-2 text-slate-600"></i>
+            Settings, Sensory Themes & Backup
+          </h2>
+          <p class="text-xs text-theme-textMuted mt-0.5">Customize your kitchen experience, toggle soothing sounds, and manage your private offline data.</p>
+        </div>
+
+        <!-- 8 Sensory Themes Grid -->
+        <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-3">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+            <i data-lucide="palette" class="w-4 h-4 mr-1.5 text-theme-accent"></i>
+            8 Calming ADHD-Friendly Color Themes
+          </h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="themePickerGrid">
+            <!-- 8 Theme Cards -->
+          </div>
+        </div>
+
+        <!-- Sensory Audio & Sound Settings -->
+        <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-3">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+            <i data-lucide="volume-2" class="w-4 h-4 mr-1.5 text-theme-accent"></i>
+            Sensory Audio & Dopamine Chimes
+          </h3>
+          <div class="flex items-center justify-between p-3 rounded-xl bg-theme-bg border border-theme-border">
+            <div>
+              <p class="text-xs font-bold text-theme-text">Gentle Audio Chimes (Web Audio API)</p>
+              <p class="text-[11px] text-theme-textMuted">Plays soothing tone on task check-off and timer alerts (no loud jarring noises).</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="playChimeSound('step')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-theme-cardSub text-theme-text border border-theme-border hover:bg-theme-border">Test Tone 🔔</button>
+              <input type="checkbox" id="audioSettingCheckbox" onchange="toggleAudioSetting(this.checked)" checked class="w-4 h-4 accent-amber-600 cursor-pointer">
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Backup & CSV Export -->
+        <div class="bg-theme-card p-4 sm:p-5 rounded-2xl border border-theme-border shadow-xs space-y-3">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+            <i data-lucide="hard-drive" class="w-4 h-4 mr-1.5 text-theme-accent"></i>
+            Data Privacy, Backup & Export
+          </h3>
+          <p class="text-xs text-theme-textMuted">100% of your data is stored securely in your browser's local storage. No server tracking.</p>
+          
+          <div class="flex flex-wrap gap-2.5 pt-1">
+            <button onclick="exportDataJSON()" class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-cardSub text-theme-text border border-theme-border hover:bg-theme-border text-xs font-bold flex items-center space-x-1.5">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Backup JSON</span>
+            </button>
+
+            <label class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-cardSub text-theme-text border border-theme-border hover:bg-theme-border text-xs font-bold flex items-center space-x-1.5 cursor-pointer">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span>Restore JSON</span>
+              <input type="file" id="restoreFileInput" onchange="importDataJSON(event)" class="hidden" accept=".json">
+            </label>
+
+            <button onclick="exportMealsCSV()" class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-cardSub text-theme-text border border-theme-border hover:bg-theme-border text-xs font-bold flex items-center space-x-1.5">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+              <span>Export Meals CSV</span>
+            </button>
+
+            <button onclick="exportGroceryCSV()" class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-cardSub text-theme-text border border-theme-border hover:bg-theme-border text-xs font-bold flex items-center space-x-1.5">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+              <span>Export Grocery CSV</span>
+            </button>
+
+            <button onclick="resetToFactoryDefault()" class="btn-tactile px-3.5 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 text-xs font-bold flex items-center space-x-1.5">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              <span>Reset to Defaults</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Clinical & ADHD Rationale Card -->
+        <div class="bg-gradient-to-br from-theme-card via-theme-cardSub to-theme-card p-5 rounded-2xl border border-theme-border text-xs space-y-2">
+          <h4 class="font-extrabold text-theme-text flex items-center">
+            <i data-lucide="brain" class="w-4 h-4 mr-1.5 text-theme-accent"></i>
+            Why NeuroKitchen™ OS Works for ADHD & Neurodivergent Brains:
+          </h4>
+          <ul class="space-y-1.5 text-theme-textMuted pl-5 list-disc leading-relaxed">
+            <li><strong>Eliminates Decision Fatigue:</strong> Meals are categorized strictly by available spoons/energy, not ambitious ideals.</li>
+            <li><strong>Time Blindness Cure:</strong> Cook Mode breaks recipes into single-step micro-actions with integrated countdown timers.</li>
+            <li><strong>Solves Object Impermanence:</strong> Anti-waste pantry alerts bring expiring items to your immediate awareness before they spoil.</li>
+            <li><strong>Sensory-Safe:</strong> Filter by texture and comfort foods for days when appetite or sensory tolerance is low.</li>
+            <li><strong>Dopamine Micro-Hits:</strong> Satisfying checkboxes, water droplets, and gentle celebration chimes keep motivation steady.</li>
+          </ul>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- FLOATING MOBILE BOTTOM NAVIGATION BAR (Visible on screens < 768px) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-theme-card/95 backdrop-blur-md border-t border-theme-border px-2 py-1.5 flex items-center justify-around shadow-lg no-print">
+    
+    <button onclick="switchTab('today')" id="mobTabBtn-today" class="mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-accent transition">
+      <i data-lucide="home" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">Today</span>
+    </button>
+
+    <button onclick="switchTab('safe_foods')" id="mobTabBtn-safe_foods" class="mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-textMuted transition">
+      <i data-lucide="heart" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">Safe Foods</span>
+    </button>
+
+    <button onclick="switchTab('weekly_plan')" id="mobTabBtn-weekly_plan" class="mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-textMuted transition">
+      <i data-lucide="calendar" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">Weekly</span>
+    </button>
+
+    <button onclick="switchTab('pantry')" id="mobTabBtn-pantry" class="mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-textMuted transition">
+      <i data-lucide="package" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">Pantry</span>
+    </button>
+
+    <button onclick="switchTab('grocery')" id="mobTabBtn-grocery" class="mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-textMuted transition">
+      <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">Grocery</span>
+    </button>
+
+    <button onclick="switchTab('settings')" id="mobTabBtn-settings" class="mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-textMuted transition">
+      <i data-lucide="settings" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">Settings</span>
+    </button>
+
+  </nav>
+
+  <!-- ======================================================= -->
+  <!-- MODAL 1: FOCUS COOK MODE (MICRO-STEP ASSISTANT + TIMER) -->
+  <!-- ======================================================= -->
+  <div id="cookModeModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-theme-card text-theme-text w-full max-w-lg rounded-3xl border border-theme-border shadow-2xl p-5 sm:p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-theme-border pb-3">
+        <div>
+          <span class="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full bg-theme-cardSub text-theme-textMuted border border-theme-border">
+            Focus Cook Mode • One Step at a Time
+          </span>
+          <h3 id="cookModeRecipeTitle" class="text-base sm:text-lg font-black text-theme-text mt-1">Pasta + Frozen Peas + Cheese</h3>
+          <p id="cookModeRecipeMeta" class="text-xs text-theme-textMuted">🥄 3 Spoons • 10 Minutes Total</p>
+        </div>
+        <button onclick="closeCookMode()" class="p-2 rounded-xl bg-theme-bg hover:bg-theme-border transition text-theme-text">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Step Progress Bar -->
+      <div class="space-y-1">
+        <div class="flex justify-between text-xs font-bold text-theme-textMuted">
+          <span id="cookStepProgressText">Step 1 of 4</span>
+          <span id="cookStepPctText">25%</span>
+        </div>
+        <div class="w-full h-2.5 bg-theme-bg rounded-full overflow-hidden border border-theme-border">
+          <div id="cookProgressBar" class="h-full bg-theme-accent transition-all duration-300" style="width: 25%"></div>
+        </div>
+      </div>
+
+      <!-- Step List (Highlighted active step, faded inactive) -->
+      <div class="space-y-2.5" id="cookStepList">
+        <!-- Dynamically rendered step cards -->
+      </div>
+
+      <!-- Live Focus Countdown Timer Box -->
+      <div class="bg-theme-cardSub p-4 rounded-2xl border border-theme-border text-center space-y-3">
+        <p class="text-[10px] uppercase font-extrabold tracking-wider text-theme-textMuted">Cooking Step Timer</p>
+        <div id="cookTimerDisplay" class="text-4xl sm:text-5xl font-mono font-black text-theme-text tracking-wider">
+          05:00
+        </div>
+        
+        <div class="flex items-center justify-center space-x-2 pt-1">
+          <button onclick="startCookTimer()" id="timerStartBtn" class="btn-tactile px-4 py-2 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold shadow-sm flex items-center space-x-1">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i>
+            <span>Start Timer</span>
+          </button>
+          <button onclick="pauseCookTimer()" id="timerPauseBtn" class="btn-tactile px-3.5 py-2 rounded-xl bg-theme-card border border-theme-border text-theme-text text-xs font-bold hover:bg-theme-border">Pause</button>
+          <button onclick="addTimerMinutes(2)" class="btn-tactile px-3 py-2 rounded-xl bg-theme-card border border-theme-border text-theme-text text-xs font-bold hover:bg-theme-border">+2m</button>
+          <button onclick="addTimerMinutes(5)" class="btn-tactile px-3 py-2 rounded-xl bg-theme-card border border-theme-border text-theme-text text-xs font-bold hover:bg-theme-border">+5m</button>
+          <button onclick="resetCookTimer()" class="btn-tactile p-2 rounded-xl bg-theme-card border border-theme-border text-theme-text text-xs font-bold hover:bg-theme-border" title="Reset Timer">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Next Step Large CTA -->
+      <button onclick="nextCookStep()" id="cookNextStepBtn" class="btn-tactile w-full py-3.5 rounded-2xl bg-theme-accent hover:bg-theme-accentHover text-white font-extrabold text-sm shadow-md flex items-center justify-center space-x-2">
+        <i data-lucide="check" class="w-4 h-4"></i>
+        <span id="cookNextStepBtnText">Done This Step &rarr; Next Step</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- MODAL 2: PANIC FOOD DECISION WHEEL / RANDOMIZER -->
+  <!-- ======================================================= -->
+  <div id="panicWheelModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-theme-card text-theme-text w-full max-w-md rounded-3xl border border-theme-border shadow-2xl p-5 sm:p-6 space-y-5 text-center">
+      
+      <div class="flex items-center justify-between border-b border-theme-border pb-2.5">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-rose-600 flex items-center">
+          <span class="text-base mr-1">🎲</span> Anti-Decision Paralysis
+        </span>
+        <button onclick="closePanicWheel()" class="p-1.5 rounded-xl bg-theme-bg text-theme-text">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="text-lg font-black text-theme-text">What Should I Eat Right Now?</h3>
+        <p class="text-xs text-theme-textMuted">When executive function is zero, let the wheel pick a safe food for you.</p>
+      </div>
+
+      <!-- Animated Roulette Wheel Visual -->
+      <div class="relative w-44 h-44 mx-auto my-2 rounded-full border-4 border-theme-border bg-gradient-to-tr from-amber-200 via-rose-100 to-amber-100 flex items-center justify-center shadow-inner overflow-hidden" id="wheelContainer">
+        <div class="absolute inset-0 flex items-center justify-center text-4xl" id="wheelSpinnerVisual">
+          🍕 🥗 🍜 🥪 🥑 🧀 🥣
+        </div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-6 bg-rose-500 rounded-b-md shadow-md z-10"></div>
+      </div>
+
+      <!-- Selected Result Card -->
+      <div id="wheelResultBox" class="p-4 rounded-2xl bg-theme-cardSub border border-theme-border text-left space-y-2 hidden">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Your Chosen Meal!</span>
+          <span id="wheelResultSpoons" class="text-xs font-bold text-theme-accent">🥄 1 Spoon</span>
+        </div>
+        <h4 id="wheelResultName" class="text-base font-black text-theme-text">Cereal + Milk + Sliced Banana</h4>
+        <p id="wheelResultDesc" class="text-xs text-theme-textMuted">Zero cooking required. 2 minutes prep. Maximum comfort.</p>
+        <button onclick="launchCookFromWheel()" class="btn-tactile w-full py-2.5 rounded-xl bg-theme-accent text-white font-bold text-xs mt-2 flex items-center justify-center space-x-1">
+          <i data-lucide="chef-hat" class="w-3.5 h-3.5"></i>
+          <span>Open Step-by-Step Cook Mode</span>
+        </button>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="spinPanicWheel()" id="spinWheelBtn" class="btn-tactile w-full py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-black text-sm shadow-md flex items-center justify-center space-x-2">
+          <span>🎲</span>
+          <span>Spin For a 1-Spoon Meal!</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- MODAL 3: ADD / EDIT CUSTOM MEAL -->
+  <!-- ======================================================= -->
+  <div id="addMealModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-theme-card text-theme-text w-full max-w-lg rounded-3xl border border-theme-border shadow-2xl p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-theme-border pb-2.5">
+        <h3 class="text-base font-black text-theme-text flex items-center">
+          <i data-lucide="plus-circle" class="w-4 h-4 mr-2 text-theme-accent"></i>
+          Add New Recipe / Safe Food
+        </h3>
+        <button onclick="closeAddMealModal()" class="p-1.5 rounded-xl bg-theme-bg text-theme-text">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveCustomMeal(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-bold text-theme-text mb-1">Recipe Name *</label>
+          <input type="text" id="formMealName" placeholder="e.g. Cheesy Garlic Toast + Tomato Soup" required class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-semibold focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-theme-text mb-1">Spoon Energy Rating (1-5) *</label>
+            <select id="formMealSpoons" class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-bold focus:outline-none">
+              <option value="1">🥄 1 Spoon (Emergency / No-Cook, 2-5m)</option>
+              <option value="2">🥄🥄 2 Spoons (Low Effort / Toaster, 5-10m)</option>
+              <option value="3" selected>🥄🥄🥄 3 Spoons (1-Pan / Moderate, 15m)</option>
+              <option value="4">🥄🥄🥄🥄 4 Spoons (Full Cooking, 25m)</option>
+              <option value="5">🥄🥄🥄🥄🥄 5 Spoons (Hyperfocus Batch, 40m+)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-theme-text mb-1">Total Time (Minutes)</label>
+            <input type="number" id="formMealTime" value="10" min="1" max="180" class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-bold focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-theme-text mb-1">Sensory Category</label>
+          <select id="formMealCategory" class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-medium focus:outline-none">
+            <option value="warm">🍲 Warm & Cheesy</option>
+            <option value="crunchy">🥨 Crunchy</option>
+            <option value="protein">🍗 High-Protein</option>
+            <option value="sweet">🍓 Sweet Dopamine</option>
+            <option value="cold">🥪 Cold & Fresh</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-theme-text mb-1">Key Ingredients (Comma separated, Max 5)</label>
+          <input type="text" id="formMealIngredients" placeholder="e.g. Bread, Butter, Garlic powder, Cheddar cheese" required class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-medium focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-theme-text mb-1">Step-by-Step Cooking Instructions (One step per line)</label>
+          <textarea id="formMealSteps" rows="4" placeholder="1. Toast the bread in toaster&#10;2. Spread butter and sprinkle garlic powder&#10;3. Add cheese and microwave for 30 seconds" required class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-medium focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center space-x-2 pt-1">
+          <input type="checkbox" id="formMealIsSafe" checked class="w-4 h-4 accent-amber-600 rounded">
+          <label for="formMealIsSafe" class="font-bold text-theme-text cursor-pointer">Mark as a Starred Safe Food (Dopamine Vault)</label>
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" onclick="closeAddMealModal()" class="px-4 py-2 rounded-xl bg-theme-bg border border-theme-border text-theme-text font-bold">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white font-bold shadow-sm">Save Recipe</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- MODAL 4: ADD PANTRY ITEM -->
+  <!-- ======================================================= -->
+  <div id="addPantryModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-theme-card text-theme-text w-full max-w-sm rounded-3xl border border-theme-border shadow-2xl p-5 space-y-4">
+      
+      <div class="flex items-center justify-between border-b border-theme-border pb-2.5">
+        <h3 class="text-base font-black text-theme-text flex items-center">
+          <i data-lucide="package-plus" class="w-4 h-4 mr-2 text-emerald-600"></i>
+          Add Item to Pantry
+        </h3>
+        <button onclick="closeAddPantryModal()" class="p-1.5 rounded-xl bg-theme-bg text-theme-text">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="savePantryItem(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-theme-text mb-1">Item Name *</label>
+          <input type="text" id="pantryItemName" placeholder="e.g. Cheddar Cheese (200g)" required class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-semibold focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-theme-text mb-1">Category</label>
+          <select id="pantryItemCat" class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-medium focus:outline-none">
+            <option value="Dairy & Fridge">🧀 Dairy & Fridge</option>
+            <option value="Produce">🥦 Produce & Fruits</option>
+            <option value="Bakery">🍞 Bread & Bakery</option>
+            <option value="Pantry Staples">🥫 Pantry Staples & Cans</option>
+            <option value="Frozen">❄️ Freezer Items</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-theme-text mb-1">Expiration Date (Optional)</label>
+          <input type="date" id="pantryItemExpiry" class="w-full bg-theme-bg border border-theme-border rounded-xl px-3 py-2 text-theme-text font-medium focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" onclick="closeAddPantryModal()" class="px-3.5 py-1.5 rounded-xl bg-theme-bg border border-theme-border text-theme-text font-bold">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white font-bold shadow-sm">Add Item</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- PRINTABLE TEMPLATE CONTAINER (Hidden on screen) -->
+  <div id="printContainer" class="hidden print:block p-8 bg-white text-black space-y-6">
+    <div class="border-b-2 border-black pb-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-black">NeuroKitchen™ OS • Weekly Meal & Grocery Plan</h1>
+        <p class="text-xs text-gray-600">The ADHD Overwhelm-Free Low-Spoon Kitchen System</p>
+      </div>
+      <div class="text-right text-xs">
+        <p class="font-bold">SkyJad Studio</p>
+        <p id="printDateDisplay">Date: Today</p>
+      </div>
+    </div>
+    <div id="printBodyContent" class="space-y-4">
+      <!-- Injected during print trigger -->
+    </div>
+  </div>
+
+  <!-- CORE JAVASCRIPT LOGIC ENGINE -->
+  <script>
+    // ==========================================
+    // 1. DEFAULT DATASET (40+ CURATED ADHD RECIPES)
+    // ==========================================
+    const DEFAULT_MEALS = [
+      // 🥄 1-SPOON EMERGENCY & NO-COOK MEALS
+      {
+        id: 'm-1',
+        name: 'Classic Cereal + Milk + Sliced Banana',
+        spoons: 1,
+        time: 2,
+        category: 'sweet',
+        isSafe: true,
+        ingredients: ['Cereal', 'Milk', 'Banana'],
+        steps: [
+          'Pour favorite crunchy cereal into a bowl.',
+          'Add cold milk to desired level.',
+          'Slice banana directly into the bowl with a butter knife.',
+          'Eat immediately with zero guilt!'
+        ]
+      },
+      {
+        id: 'm-2',
+        name: 'Warm Baked Beans on Buttered Toast',
+        spoons: 1,
+        time: 4,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Bread', 'Baked Beans', 'Butter', 'Black Pepper'],
+        steps: [
+          'Pop 2 slices of bread into the toaster.',
+          'Pour half a can of baked beans into a microwave mug and heat for 90 seconds.',
+          'Spread butter generously over hot toast.',
+          'Pour hot beans over toast and add a crack of black pepper.'
+        ]
+      },
+      {
+        id: 'm-3',
+        name: 'Peanut Butter & Honey Toast with Apple Slices',
+        spoons: 1,
+        time: 3,
+        category: 'crunchy',
+        isSafe: true,
+        ingredients: ['Bread', 'Peanut Butter', 'Honey', 'Apple'],
+        steps: [
+          'Toast 2 slices of sourdough or sandwich bread.',
+          'Slather with creamy or crunchy peanut butter.',
+          'Drizzle a little golden honey on top.',
+          'Slice an apple into wedges for satisfying crunch.'
+        ]
+      },
+      {
+        id: 'm-4',
+        name: 'Greek Yogurt + Berries + Granola Dopamine Bowl',
+        spoons: 1,
+        time: 3,
+        category: 'sweet',
+        isSafe: true,
+        ingredients: ['Greek Yogurt', 'Frozen Berries', 'Granola', 'Honey'],
+        steps: [
+          'Scoop 1 cup of thick vanilla or plain Greek yogurt into bowl.',
+          'Microwave frozen berries for 20 seconds to make warm fruit syrup.',
+          'Pour warm berries over cold yogurt.',
+          'Top with crunchy granola & a drizzle of honey.'
+        ]
+      },
+      {
+        id: 'm-5',
+        name: 'Microwave 60-Second Cheesy Quesadilla',
+        spoons: 1,
+        time: 3,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Flour Tortilla', 'Shredded Cheddar', 'Salsa'],
+        steps: [
+          'Place 1 flour tortilla on a microwave-safe plate.',
+          'Cover one half with plenty of shredded cheddar or mozzarella.',
+          'Fold tortilla in half.',
+          'Microwave for 45 to 60 seconds until cheese is melted and bubbling.',
+          'Dip in salsa or sour cream.'
+        ]
+      },
+      {
+        id: 'm-6',
+        name: 'Savory Hummus & Pita Snack Plate with Cucumber',
+        spoons: 1,
+        time: 3,
+        category: 'cold',
+        isSafe: true,
+        ingredients: ['Hummus', 'Pita Bread', 'Cucumber', 'Baby Carrots', 'Feta Cheese'],
+        steps: [
+          'Dollop 3 spoonfuls of hummus in center of plate.',
+          'Cut pita bread into triangles.',
+          'Slice cucumber into rounds.',
+          'Add baby carrots and a small handful of salty feta cheese.'
+        ]
+      },
+
+      // 🥄🥄 2-SPOONS LOW-EFFORT / QUICK COMFORT MEALS
+      {
+        id: 'm-7',
+        name: 'Crispy Air-Fryer Chicken Nuggets + Crinkle Fries',
+        spoons: 2,
+        time: 12,
+        category: 'crunchy',
+        isSafe: true,
+        ingredients: ['Frozen Chicken Nuggets', 'Frozen Fries', 'Ketchup', 'Mayo'],
+        steps: [
+          'Preheat air fryer to 390°F (200°C) for 2 minutes.',
+          'Toss frozen nuggets and fries into the basket in a single layer.',
+          'Set timer for 10 minutes, shake basket halfway through.',
+          'Mix equal parts ketchup and mayo for quick fancy dipping sauce.'
+        ]
+      },
+      {
+        id: 'm-8',
+        name: '10-Minute Ramen Upgrade with Jammy Egg & Spinach',
+        spoons: 2,
+        time: 8,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Ramen Noodle Pack', '1 Egg', 'Handful Baby Spinach', 'Sesame Oil'],
+        steps: [
+          'Boil 2 cups of water in a small pot with the seasoning packet.',
+          'Add noodles and drop in a whole egg without breaking the yolk.',
+          'Simmer for 3 minutes.',
+          'Toss in a handful of fresh spinach right before turning off heat (it wilts in 10s).',
+          'Drizzle a few drops of sesame oil on top.'
+        ]
+      },
+      {
+        id: 'm-9',
+        name: 'Crispy Grilled Cheese + Canned Tomato Soup',
+        spoons: 2,
+        time: 10,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Bread', 'Cheddar Cheese', 'Butter', 'Canned Tomato Soup'],
+        steps: [
+          'Heat a non-stick skillet on medium heat.',
+          'Butter one side of 2 slices of bread, sandwich thick cheese slices in middle.',
+          'Fry sandwich for 3-4 minutes per side until golden brown and gooey.',
+          'Simultaneously microwave tomato soup in a mug for 2 minutes.',
+          'Dip crispy sandwich into warm soup.'
+        ]
+      },
+      {
+        id: 'm-10',
+        name: 'Scrambled Eggs with Melted Cheddar & Toasted Bagel',
+        spoons: 2,
+        time: 8,
+        category: 'protein',
+        isSafe: true,
+        ingredients: ['Eggs (2)', 'Butter', 'Cheddar Cheese', 'Bagel'],
+        steps: [
+          'Toast your favorite bagel in toaster.',
+          'Whisk 2 eggs in a cup with a pinch of salt.',
+          'Melt 1 tsp butter in non-stick pan on medium heat, pour eggs.',
+          'Gently push eggs with spatula for 2 minutes until soft curds form.',
+          'Turn off heat, stir in shredded cheese, and scoop onto toasted bagel.'
+        ]
+      },
+      {
+        id: 'm-11',
+        name: 'Loaded Tuna Salad Melt with Dijon & Crisp Pickles',
+        spoons: 2,
+        time: 7,
+        category: 'protein',
+        isSafe: true,
+        ingredients: ['Canned Tuna', 'Mayo', 'Dijon Mustard', 'Pickles', 'Bread', 'Cheese'],
+        steps: [
+          'Drain 1 can of tuna and mix in a bowl with 1 tbsp mayo and 1 tsp Dijon.',
+          'Dice 1 pickle spear and mix into tuna.',
+          'Spread onto bread, top with a cheese slice.',
+          'Broil in toaster oven or microwave for 1 minute until bubbly.'
+        ]
+      },
+
+      // 🥄🥄🥄 3-SPOONS 1-PAN & MODERATE ENERGY MEALS
+      {
+        id: 'm-12',
+        name: '15-Minute Butter Garlic Pasta with Frozen Peas & Parmesan',
+        spoons: 3,
+        time: 15,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Pasta (Penne or Shells)', 'Frozen Sweet Peas', 'Butter', 'Garlic Powder', 'Parmesan Cheese'],
+        steps: [
+          'Bring a pot of salted water to a rolling boil.',
+          'Drop in pasta and set timer for 9 minutes.',
+          'During the last 2 minutes of boiling, dump frozen peas directly into pasta water.',
+          'Drain pasta and peas together in colander.',
+          'Return to warm pot, stir in 2 tbsp butter, garlic powder, salt, and generous parmesan.'
+        ]
+      },
+      {
+        id: 'm-13',
+        name: 'Sheet Pan Smoked Sausage, Mini Potatoes & Bell Peppers',
+        spoons: 3,
+        time: 25,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Smoked Sausage Rope', 'Baby Potatoes', 'Bell Pepper', 'Olive Oil', 'Italian Seasoning'],
+        steps: [
+          'Preheat oven to 400°F (200°C) and line baking tray with foil (easy cleanup!).',
+          'Slice smoked sausage into coins, halve baby potatoes, chop bell pepper.',
+          'Toss everything on the tray with olive oil, salt, and Italian seasoning.',
+          'Bake for 20-25 minutes until potatoes are fork-tender and sausage is browned.'
+        ]
+      },
+      {
+        id: 'm-14',
+        name: '1-Skillet Ground Beef or Turkey Soft Tacos',
+        spoons: 3,
+        time: 15,
+        category: 'protein',
+        isSafe: true,
+        ingredients: ['Ground Beef/Turkey (1 lb)', 'Taco Seasoning Packet', 'Soft Tortillas', 'Shredded Lettuce', 'Sour Cream'],
+        steps: [
+          'Brown ground meat in a skillet on medium-high heat for 6-8 minutes.',
+          'Drain excess fat, stir in taco seasoning packet and 1/3 cup water.',
+          'Simmer for 3 minutes until rich sauce thickens.',
+          'Warm tortillas in microwave for 20 seconds.',
+          'Assemble tacos with meat, cool sour cream, and shredded lettuce.'
+        ]
+      },
+      {
+        id: 'm-15',
+        name: 'Teriyaki Chicken Rice Bowl with Steamed Edamame',
+        spoons: 3,
+        time: 18,
+        category: 'protein',
+        isSafe: false,
+        ingredients: ['Chicken Breast Strips', 'Bottled Teriyaki Sauce', 'Microwave Jasmine Rice', 'Frozen Shelled Edamame'],
+        steps: [
+          'Heat 1 tbsp oil in skillet and sear chicken strips for 6 minutes.',
+          'Microwave rice pouch for 90 seconds.',
+          'Microwave frozen edamame bowl for 2 minutes.',
+          'Pour teriyaki sauce over chicken and toss for 1 minute until sticky.',
+          'Assemble rice, chicken, and edamame in a deep bowl.'
+        ]
+      },
+
+      // 🥄🥄🥄🥄 4-SPOONS / 5-SPOONS HIGH ENERGY & BATCH COOKING
+      {
+        id: 'm-16',
+        name: 'Cozy One-Pot Creamy Tuscan Chicken Penne',
+        spoons: 4,
+        time: 30,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Chicken Breast', 'Penne', 'Heavy Cream', 'Sun-Dried Tomatoes', 'Spinach', 'Garlic'],
+        steps: [
+          'Sear seasoned chicken cubes in deep skillet for 6 minutes, then set aside.',
+          'Sauté minced garlic and chopped sun-dried tomatoes in remaining pan juices for 1 minute.',
+          'Add dry penne, 2 cups chicken broth, and 1 cup cream to pan.',
+          'Cover and simmer for 12 minutes until pasta is al dente.',
+          'Stir in fresh spinach and cooked chicken until sauce is velvety.'
+        ]
+      },
+      {
+        id: 'm-17',
+        name: 'Big Batch Japanese Golden Curry (4-Day Meal Prep)',
+        spoons: 5,
+        time: 45,
+        category: 'warm',
+        isSafe: true,
+        ingredients: ['Japanese Curry Roux Blocks', 'Beef or Chicken', 'Potatoes (3)', 'Carrots (2)', 'Onion (1)', 'Rice'],
+        steps: [
+          'Chop onion, peel and cube potatoes and carrots.',
+          'Brown meat and onions in large pot with oil for 5 minutes.',
+          'Add potatoes, carrots, and 4 cups of water; bring to boil, then simmer for 20 minutes.',
+          'Turn off heat, break in curry roux blocks, and stir until completely dissolved.',
+          'Simmer on low for 5 minutes until glossy and thick. Portion into 4 storage containers for the week!'
+        ]
+      }
+    ];
+
+    const DEFAULT_PANTRY = [
+      { id: 'p-1', name: 'Cheddar Cheese Block (400g)', category: 'Dairy & Fridge', expiry: getFutureDateStr(3) },
+      { id: 'p-2', name: 'Sourdough Bread (1 loaf)', category: 'Bakery', expiry: getFutureDateStr(2) },
+      { id: 'p-3', name: 'Fresh Bananas (bunch)', category: 'Produce', expiry: getFutureDateStr(4) },
+      { id: 'p-4', name: 'Whole Milk (1 Gallon)', category: 'Dairy & Fridge', expiry: getFutureDateStr(7) },
+      { id: 'p-5', name: 'Large Brown Eggs (12 pk)', category: 'Dairy & Fridge', expiry: getFutureDateStr(14) },
+      { id: 'p-6', name: 'Frozen Sweet Peas (1 bag)', category: 'Frozen', expiry: getFutureDateStr(90) },
+      { id: 'p-7', name: 'Penne Pasta (500g)', category: 'Pantry Staples', expiry: getFutureDateStr(180) },
+      { id: 'p-8', name: 'Canned Baked Beans (2 cans)', category: 'Pantry Staples', expiry: getFutureDateStr(200) },
+      { id: 'p-9', name: 'Creamy Peanut Butter (1 jar)', category: 'Pantry Staples', expiry: getFutureDateStr(120) },
+      { id: 'p-10', name: 'Flour Tortillas (10 pk)', category: 'Bakery', expiry: getFutureDateStr(10) }
+    ];
+
+    const DEFAULT_GROCERY = [
+      { id: 'g-1', name: 'Fresh Spinach (1 bag)', aisle: 'Produce', done: false },
+      { id: 'g-2', name: 'Greek Yogurt (Vanilla)', aisle: 'Dairy & Eggs', done: false },
+      { id: 'g-3', name: 'Sliced Bagels', aisle: 'Bakery', done: true },
+      { id: 'g-4', name: 'Canned Tuna in Olive Oil', aisle: 'Pantry Staples', done: false },
+      { id: 'g-5', name: 'Frozen Crinkle Fries', aisle: 'Frozen', done: false },
+      { id: 'g-6', name: 'Honey Honey Bear', aisle: 'Pantry Staples', done: true },
+      { id: 'g-7', name: 'Salsa Mild', aisle: 'Pantry Staples', done: false },
+      { id: 'g-8', name: 'Baby Carrots (1 bag)', aisle: 'Produce', done: false }
+    ];
+
+    const DEFAULT_WEEKLY_PLAN = [
+      { day: 'Mon', mealId: 'm-12', label: 'Monday' },
+      { day: 'Tue', mealId: 'm-8', label: 'Tuesday' },
+      { day: 'Wed', mealId: 'm-7', label: 'Wednesday' },
+      { day: 'Thu', mealId: 'm-5', label: 'Thursday' },
+      { day: 'Fri', mealId: 'm-9', label: 'Friday' },
+      { day: 'Sat', mealId: 'm-14', label: 'Saturday' },
+      { day: 'Sun', mealId: 'm-2', label: 'Sunday' }
+    ];
+
+    const DEFAULT_TASKS = [
+      { id: 't-1', text: 'Eat lunch — anything counts!', done: true },
+      { id: 't-2', text: 'Drink 1 big glass of water 💧', done: false },
+      { id: 't-3', text: 'Check expiry on 1 fridge item', done: false },
+      { id: 't-4', text: 'Make 1 simple low-spoon meal', done: false }
+    ];
+
+    function getFutureDateStr(daysAhead) {
+      const d = new Date();
+      d.setDate(d.getDate() + daysAhead);
+      return d.toISOString().split('T')[0];
+    }
+
+    // ==========================================
+    // 2. STATE MANAGEMENT & LOCAL STORAGE
+    // ==========================================
+    let state = {
+      theme: 'matcha',
+      audioEnabled: true,
+      currentSpoons: 3,
+      waterGlasses: 3,
+      meals: [],
+      pantry: [],
+      grocery: [],
+      weeklyPlan: [],
+      tasks: [],
+      pantrySelectedIngredients: []
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem('neurokitchen_state_v1');
+      if (saved) {
+        try {
+          state = JSON.parse(saved);
+        } catch(e) {
+          initStateDefaults();
+        }
+      } else {
+        initStateDefaults();
+      }
+      applyTheme(state.theme || 'honey');
+      renderAll();
+    }
+
+    function initStateDefaults() {
+      state.theme = 'matcha';
+      state.audioEnabled = true;
+      state.currentSpoons = 3;
+      state.waterGlasses = 2;
+      state.meals = DEFAULT_MEALS;
+      state.pantry = DEFAULT_PANTRY;
+      state.grocery = DEFAULT_GROCERY;
+      state.weeklyPlan = DEFAULT_WEEKLY_PLAN;
+      state.tasks = DEFAULT_TASKS;
+      state.pantrySelectedIngredients = ['Cheddar Cheese', 'Bread', 'Pasta'];
+      saveState();
+    }
+
+    function saveState() {
+      localStorage.setItem('neurokitchen_state_v1', JSON.stringify(state));
+    }
+
+    // ==========================================
+    // 3. THEME ENGINE & AUDIO SYNTHESIZER
+    // ==========================================
+    const THEMES = [
+      { id: 'honey', name: 'Honey Butter', emoji: '🍯', desc: 'Warm & Cheerful (Default)' },
+      { id: 'matcha', name: 'Matcha Sage', emoji: '🍵', desc: 'Calming & Grounded' },
+      { id: 'lavender', name: 'Lavender Cloud', emoji: '💜', desc: 'Sensory Soothing' },
+      { id: 'peach', name: 'Warm Peach', emoji: '🍑', desc: 'Cozy & Energizing' },
+      { id: 'nordic', name: 'Nordic Sky', emoji: '❄️', desc: 'Cool Clear Focus' },
+      { id: 'sand', name: 'Warm Sand', emoji: '🌾', desc: 'Minimal Organic' },
+      { id: 'dark', name: 'OLED Night', emoji: '🌙', desc: 'Low Stimulation Dark' },
+      { id: 'high_contrast', name: 'High Contrast', emoji: '⚡', desc: 'Maximum Clarity' }
+    ];
+
+    function applyTheme(themeId) {
+      state.theme = themeId;
+      document.documentElement.setAttribute('data-theme', themeId);
+      const sel = document.getElementById('headerThemeSelector');
+      if (sel) sel.value = themeId;
+      saveState();
+    }
+
+    function changeTheme(themeId) {
+      applyTheme(themeId);
+      playChimeSound('click');
+      renderThemePicker();
+    }
+
+    // Gentle Web Audio API Tone Generator (Zero external MP3 dependencies)
+    let audioCtx = null;
+    function playChimeSound(type) {
+      if (!state.audioEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'step') {
+          // Gentle marimba two-tone 'ting-ting'
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); // E5
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'complete') {
+          // Celebratory arpeggio
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + (i * 0.08));
+            g.gain.setValueAtTime(0.25, now + (i * 0.08));
+            g.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.08) + 0.4);
+            o.start(now + (i * 0.08));
+            o.stop(now + (i * 0.08) + 0.4);
+          });
+        } else {
+          // Subtle soft tap
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        }
+      } catch(e) {
+        // Audio fallback ignore
+      }
+    }
+
+    function toggleAudio() {
+      state.audioEnabled = !state.audioEnabled;
+      updateAudioIcon();
+      saveState();
+      if (state.audioEnabled) playChimeSound('step');
+    }
+
+    function toggleAudioSetting(val) {
+      state.audioEnabled = val;
+      updateAudioIcon();
+      saveState();
+      if (val) playChimeSound('step');
+    }
+
+    function updateAudioIcon() {
+      const icon = document.getElementById('audioIcon');
+      const check = document.getElementById('audioSettingCheckbox');
+      if (icon) {
+        icon.setAttribute('data-lucide', state.audioEnabled ? 'volume-2' : 'volume-x');
+        lucide.createIcons();
+      }
+      if (check) check.checked = state.audioEnabled;
+    }
+
+    // ==========================================
+    // 4. NAVIGATION & TAB SWITCHING
+    // ==========================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+      const activeTab = document.getElementById('view-' + tabId);
+      if (activeTab) activeTab.classList.remove('hidden');
+
+      // Update Desktop Nav Active States
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.className = 'nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-theme-text hover:bg-theme-cardSub';
+      });
+      const currentNavBtn = document.getElementById('tabBtn-' + tabId);
+      if (currentNavBtn) {
+        currentNavBtn.className = 'nav-tab-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-theme-cardSub text-theme-accent border border-theme-border';
+      }
+
+      // Update Mobile Nav Active States
+      document.querySelectorAll('.mob-nav-btn').forEach(btn => {
+        btn.className = 'mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-textMuted transition';
+      });
+      const curMobBtn = document.getElementById('mobTabBtn-' + tabId);
+      if (curMobBtn) {
+        curMobBtn.className = 'mob-nav-btn flex flex-col items-center justify-center p-1 rounded-xl text-theme-accent transition';
+      }
+
+      playChimeSound('click');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // 5. SPOON CAPACITY & ENERGY ENGINE
+    // ==========================================
+    const SPOON_LEVELS = [
+      { spoons: 1, label: '1 Spoon', mood: 'Emergency / 0-Cook (2-5m)', advice: 'Zero-cook, microwave, or snack plate. No guilt. Fed is best!' },
+      { spoons: 2, label: '2 Spoons', mood: 'Low Effort / Toaster (5-10m)', advice: 'Air-fryer, quesadilla, or ramen upgrade. Fast and warm.' },
+      { spoons: 3, label: '3 Spoons', mood: 'Moderate / 1-Pan (15m)', advice: 'Simple one-pan pasta, sheet pan sausage, or soft tacos.' },
+      { spoons: 4, label: '4 Spoons', mood: 'Good Energy (25m)', advice: 'One-pot chicken dishes, stir fries, or elevated bowls.' },
+      { spoons: 5, label: '5 Spoons', mood: 'Hyperfocus Batch (40m+)', advice: 'Curry or chili batch prep! Stock the freezer for low-spoon days.' }
+    ];
+
+    function setSpoons(count) {
+      state.currentSpoons = parseInt(count);
+      saveState();
+      playChimeSound('step');
+      renderSpoonSelectors();
+      renderTodayMeals();
+    }
+
+    function renderSpoonSelectors() {
+      const cur = state.currentSpoons;
+      const level = SPOON_LEVELS.find(l => l.spoons === cur) || SPOON_LEVELS[2];
+
+      document.getElementById('spoonEnergyLabel').textContent = level.label;
+      document.getElementById('spoonAdviceText').textContent = level.advice;
+      document.getElementById('currentSpoonTitle').textContent = level.label + ' (' + level.mood + ')';
+      
+      const mobLabel = document.getElementById('mobileSpoonLabel');
+      if (mobLabel) mobLabel.textContent = level.label;
+
+      // Desktop Buttons
+      const deskContainer = document.getElementById('spoonSelectorButtons');
+      deskContainer.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('button');
+        const isActive = i <= cur;
+        btn.className = `btn-tactile py-2 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center ${
+          isActive 
+            ? 'bg-theme-accent text-white shadow-xs' 
+            : 'bg-theme-cardSub text-theme-textMuted border border-theme-border hover:bg-theme-border'
+        }`;
+        btn.innerHTML = `<span class="text-sm">🥄</span><span class="text-[10px] mt-0.5 font-mono">${i}</span>`;
+        btn.onclick = () => setSpoons(i);
+        deskContainer.appendChild(btn);
+      }
+
+      // Mobile Buttons
+      const mobContainer = document.getElementById('mobileSpoonButtons');
+      if (mobContainer) {
+        mobContainer.innerHTML = '';
+        for (let i = 1; i <= 5; i++) {
+          const btn = document.createElement('button');
+          const isActive = i <= cur;
+          btn.className = `btn-tactile py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 ${
+            isActive ? 'bg-theme-accent text-white' : 'bg-theme-cardSub text-theme-text border border-theme-border'
+          }`;
+          btn.innerHTML = `<span>🥄</span><span class="text-xs font-mono">${i}</span>`;
+          btn.onclick = () => setSpoons(i);
+          mobContainer.appendChild(btn);
+        }
+      }
+    }
+
+    // ==========================================
+    // 6. TODAY VIEW & MEAL RENDERING
+    // ==========================================
+    function renderTodayMeals() {
+      const curSpoons = state.currentSpoons;
+      const container = document.getElementById('energyMatchedMealsGrid');
+      container.innerHTML = '';
+
+      // Filter meals matching up to current spoons
+      const matched = state.meals.filter(m => m.spoons <= curSpoons);
+
+      if (matched.length === 0) {
+        container.innerHTML = `<div class="col-span-3 p-6 text-center text-xs text-theme-textMuted bg-theme-card rounded-2xl border border-theme-border">No meals found for this spoon level. Try adding one!</div>`;
+        return;
+      }
+
+      matched.slice(0, 6).forEach(meal => {
+        const card = createMealCardElement(meal);
+        container.appendChild(card);
+      });
+
+      // Render Emergency 1-Spoon Safe Foods
+      const emergList = document.getElementById('emergencyMealsList');
+      emergList.innerHTML = '';
+      const emergencies = state.meals.filter(m => m.spoons === 1);
+      emergencies.slice(0, 4).forEach(meal => {
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-xl bg-theme-bg border border-theme-border flex items-center justify-between hover:bg-theme-cardSub transition';
+        item.innerHTML = `
+          <div>
+            <div class="flex items-center space-x-1.5">
+              <span class="text-sm">🚨</span>
+              <h4 class="text-xs font-bold text-theme-text">${meal.name}</h4>
+            </div>
+            <p class="text-[10px] text-theme-textMuted mt-0.5">⏱️ ${meal.time} min • 🥄 ${meal.spoons} spoon • ${meal.ingredients.join(', ')}</p>
+          </div>
+          <button onclick="startCookMode('${meal.id}')" class="btn-tactile px-2.5 py-1.5 rounded-lg bg-theme-accent text-white text-[11px] font-bold shadow-xs flex items-center space-x-1">
+            <span>Cook</span>
+          </button>
+        `;
+        emergList.appendChild(item);
+      });
+
+      // Expiring Pantry Preview
+      const expiryPrev = document.getElementById('expiringPantryPreview');
+      expiryPrev.innerHTML = '';
+      state.pantry.slice(0, 3).forEach(p => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-theme-bg border border-theme-border';
+        row.innerHTML = `
+          <span class="font-medium text-theme-text truncate pr-2">${p.name}</span>
+          <span class="text-[10px] font-mono font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 shrink-0">Expires ${p.expiry}</span>
+        `;
+        expiryPrev.appendChild(row);
+      });
+
+      // Quick Grocery Preview
+      const grocPrev = document.getElementById('quickGroceryPreview');
+      grocPrev.innerHTML = '';
+      state.grocery.slice(0, 4).forEach(g => {
+        const row = document.createElement('div');
+        row.className = `flex items-center space-x-2 text-xs py-1 px-2 rounded-lg bg-theme-bg border border-theme-border ${g.done ? 'opacity-50 line-through' : ''}`;
+        row.innerHTML = `
+          <input type="checkbox" ${g.done ? 'checked' : ''} onchange="toggleGroceryDone('${g.id}')" class="accent-blue-600 rounded cursor-pointer">
+          <span class="font-medium text-theme-text truncate">${g.name}</span>
+          <span class="text-[9px] text-theme-textMuted ml-auto font-mono">(${g.aisle})</span>
+        `;
+        grocPrev.appendChild(row);
+      });
+    }
+
+    function createMealCardElement(meal) {
+      const card = document.createElement('div');
+      card.className = 'bg-theme-card p-4 rounded-2xl border border-theme-border shadow-xs flex flex-col justify-between space-y-3 hover:border-theme-accent transition';
+      
+      const spoonIcons = '🥄'.repeat(meal.spoons);
+      
+      card.innerHTML = `
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono font-bold text-theme-accent bg-theme-cardSub px-2 py-0.5 rounded-md border border-theme-border">${spoonIcons} ${meal.spoons} Spoon</span>
+            <span class="text-[10px] font-bold text-theme-textMuted bg-theme-bg px-2 py-0.5 rounded border border-theme-border">⏱️ ${meal.time} min</span>
+          </div>
+          <h4 class="text-xs sm:text-sm font-black text-theme-text leading-snug">${meal.name}</h4>
+          <p class="text-[11px] text-theme-textMuted leading-relaxed line-clamp-2">${meal.ingredients.join(' • ')}</p>
+        </div>
+
+        <div class="pt-2 border-t border-theme-border flex items-center justify-between">
+          <button onclick="toggleSafeFoodStarred('${meal.id}')" title="Star Safe Food" class="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 transition">
+            <i data-lucide="heart" class="w-4 h-4 ${meal.isSafe ? 'fill-rose-500' : ''}"></i>
+          </button>
+          <button onclick="startCookMode('${meal.id}')" class="btn-tactile px-3.5 py-1.5 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold shadow-xs flex items-center space-x-1">
+            <i data-lucide="chef-hat" class="w-3.5 h-3.5"></i>
+            <span>Cook Step-by-Step</span>
+          </button>
+        </div>
+      `;
+      return card;
+    }
+
+    // ==========================================
+    // 7. WATER & DOPAMINE TASK TRACKER
+    // ==========================================
+    function renderWaterTracker() {
+      const container = document.getElementById('waterGlassesContainer');
+      container.innerHTML = '';
+      const count = state.waterGlasses || 0;
+      document.getElementById('waterCountDisplay').textContent = `${count} / 8 Glasses`;
+
+      for (let i = 1; i <= 8; i++) {
+        const btn = document.createElement('button');
+        const isDrunk = i <= count;
+        btn.className = `btn-tactile py-2 rounded-xl text-center text-xs font-bold transition flex flex-col items-center justify-center border ${
+          isDrunk 
+            ? 'bg-cyan-500 text-white border-cyan-600 shadow-xs' 
+            : 'bg-theme-cardSub text-cyan-800 border-theme-border hover:bg-cyan-100'
+        }`;
+        btn.innerHTML = `<span class="text-base">💧</span><span class="text-[9px] mt-0.5 font-mono">${i}</span>`;
+        btn.onclick = () => {
+          state.waterGlasses = i === state.waterGlasses ? i - 1 : i;
+          saveState();
+          playChimeSound('step');
+          renderWaterTracker();
+          if (state.waterGlasses === 8) {
+            triggerConfetti();
+          }
+        };
+        container.appendChild(btn);
+      }
+    }
+
+    function renderDopamineTasks() {
+      const list = document.getElementById('dopamineTaskList');
+      list.innerHTML = '';
+      const doneCount = state.tasks.filter(t => t.done).length;
+      document.getElementById('tasksCompletedPill').textContent = `${doneCount} / ${state.tasks.length} Done`;
+
+      state.tasks.forEach(task => {
+        const item = document.createElement('div');
+        item.className = `p-2.5 rounded-xl bg-theme-bg border border-theme-border flex items-center justify-between transition ${
+          task.done ? 'opacity-60 bg-emerald-50/50' : 'hover:bg-theme-cardSub'
+        }`;
+        item.innerHTML = `
+          <label class="flex items-center space-x-2.5 text-xs text-theme-text font-semibold cursor-pointer flex-1">
+            <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleDopamineTask('${task.id}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
+            <span class="${task.done ? 'line-through text-theme-textMuted' : ''}">${task.text}</span>
+          </label>
+          <button onclick="deleteDopamineTask('${task.id}')" class="text-theme-textMuted hover:text-rose-500 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+        `;
+        list.appendChild(item);
+      });
+      lucide.createIcons();
+    }
+
+    function toggleDopamineTask(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (task) {
+        task.done = !task.done;
+        saveState();
+        if (task.done) {
+          playChimeSound('step');
+          if (state.tasks.every(t => t.done)) triggerConfetti();
+        }
+        renderDopamineTasks();
+      }
+    }
+
+    function addDopamineTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('newTaskInput');
+      const val = input.value.trim();
+      if (!val) return;
+      state.tasks.push({
+        id: 't-' + Date.now(),
+        text: val,
+        done: false
+      });
+      input.value = '';
+      saveState();
+      playChimeSound('step');
+      renderDopamineTasks();
+    }
+
+    function deleteDopamineTask(id) {
+      state.tasks = state.tasks.filter(t => t.id !== id);
+      saveState();
+      renderDopamineTasks();
+    }
+
+    // ==========================================
+    // 8. FOCUS COOK MODE WITH LIVE COUNTDOWN TIMER
+    // ==========================================
+    let currentCookMeal = null;
+    let currentCookStepIdx = 0;
+    let cookTimerSeconds = 300;
+    let cookTimerInterval = null;
+    let isTimerRunning = false;
+
+    function startCookMode(mealId) {
+      currentCookMeal = state.meals.find(m => m.id === mealId) || state.meals[0];
+      currentCookStepIdx = 0;
+      cookTimerSeconds = (currentCookMeal.time || 5) * 60;
+      clearInterval(cookTimerInterval);
+      isTimerRunning = false;
+
+      document.getElementById('cookModeRecipeTitle').textContent = currentCookMeal.name;
+      document.getElementById('cookModeRecipeMeta').textContent = `🥄 ${currentCookMeal.spoons} Spoon • ${currentCookMeal.time} Minutes Total • ${currentCookMeal.ingredients.join(', ')}`;
+
+      renderCookSteps();
+      updateCookTimerDisplay();
+      document.getElementById('cookModeModal').classList.remove('hidden');
+      playChimeSound('step');
+      lucide.createIcons();
+    }
+
+    function closeCookMode() {
+      clearInterval(cookTimerInterval);
+      document.getElementById('cookModeModal').classList.add('hidden');
+    }
+
+    function renderCookSteps() {
+      const list = document.getElementById('cookStepList');
+      list.innerHTML = '';
+      const totalSteps = currentCookMeal.steps.length;
+      const progressPct = Math.round(((currentCookStepIdx + 1) / totalSteps) * 100);
+
+      document.getElementById('cookStepProgressText').textContent = `Step ${currentCookStepIdx + 1} of ${totalSteps}`;
+      document.getElementById('cookStepPctText').textContent = `${progressPct}%`;
+      document.getElementById('cookProgressBar').style.width = `${progressPct}%`;
+
+      currentCookMeal.steps.forEach((stepText, idx) => {
+        const isCurrent = idx === currentCookStepIdx;
+        const isPast = idx < currentCookStepIdx;
+
+        const div = document.createElement('div');
+        div.className = `p-3.5 rounded-2xl border transition-all ${
+          isCurrent 
+            ? 'bg-theme-cardSub border-theme-accent scale-[1.01] shadow-xs' 
+            : isPast 
+              ? 'bg-emerald-50/50 border-emerald-200 opacity-60' 
+              : 'bg-theme-bg border-theme-border opacity-40'
+        }`;
+
+        div.innerHTML = `
+          <div class="flex items-start space-x-3">
+            <div class="h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+              isCurrent ? 'bg-theme-accent text-white' : isPast ? 'bg-emerald-600 text-white' : 'bg-theme-border text-theme-textMuted'
+            }">
+              ${isPast ? '✓' : idx + 1}
+            </div>
+            <p class="text-xs sm:text-sm font-semibold text-theme-text leading-relaxed ${isCurrent ? 'font-bold text-base' : ''}">
+              ${stepText}
+            </p>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+
+      const nextBtn = document.getElementById('cookNextStepBtnText');
+      if (currentCookStepIdx === totalSteps - 1) {
+        nextBtn.textContent = '🎉 I Cooked It! Done!';
+      } else {
+        nextBtn.textContent = `Done Step ${currentCookStepIdx + 1} → Next Step`;
+      }
+    }
+
+    function nextCookStep() {
+      const totalSteps = currentCookMeal.steps.length;
+      if (currentCookStepIdx < totalSteps - 1) {
+        currentCookStepIdx++;
+        playChimeSound('step');
+        renderCookSteps();
+      } else {
+        // Complete cooking celebration!
+        playChimeSound('complete');
+        triggerConfetti();
+        closeCookMode();
+        alert(`🌟 Awesome job! You made ${currentCookMeal.name}. Take your time and enjoy your meal!`);
+      }
+    }
+
+    function updateCookTimerDisplay() {
+      const m = Math.floor(cookTimerSeconds / 60);
+      const s = cookTimerSeconds % 60;
+      document.getElementById('cookTimerDisplay').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function startCookTimer() {
+      if (isTimerRunning) return;
+      isTimerRunning = true;
+      playChimeSound('click');
+      cookTimerInterval = setInterval(() => {
+        if (cookTimerSeconds > 0) {
+          cookTimerSeconds--;
+          updateCookTimerDisplay();
+        } else {
+          clearInterval(cookTimerInterval);
+          isTimerRunning = false;
+          playChimeSound('complete');
+          alert('⏰ Cooking Timer Finished!');
+        }
+      }, 1000);
+    }
+
+    function pauseCookTimer() {
+      clearInterval(cookTimerInterval);
+      isTimerRunning = false;
+      playChimeSound('click');
+    }
+
+    function addTimerMinutes(mins) {
+      cookTimerSeconds += (mins * 60);
+      updateCookTimerDisplay();
+      playChimeSound('click');
+    }
+
+    function resetCookTimer() {
+      clearInterval(cookTimerInterval);
+      isTimerRunning = false;
+      cookTimerSeconds = (currentCookMeal.time || 5) * 60;
+      updateCookTimerDisplay();
+    }
+
+    // ==========================================
+    // 9. PANIC DECISION WHEEL / RANDOMIZER
+    // ==========================================
+    let chosenWheelMeal = null;
+
+    function openPanicWheel() {
+      document.getElementById('wheelResultBox').classList.add('hidden');
+      document.getElementById('panicWheelModal').classList.remove('hidden');
+      playChimeSound('click');
+      lucide.createIcons();
+    }
+
+    function closePanicWheel() {
+      document.getElementById('panicWheelModal').classList.add('hidden');
+    }
+
+    function spinPanicWheel() {
+      const oneSpoonMeals = state.meals.filter(m => m.spoons === 1);
+      const pool = oneSpoonMeals.length > 0 ? oneSpoonMeals : state.meals;
+      chosenWheelMeal = pool[Math.floor(Math.random() * pool.length)];
+
+      const spinner = document.getElementById('wheelSpinnerVisual');
+      spinner.classList.add('spinning');
+      playChimeSound('step');
+
+      setTimeout(() => {
+        spinner.classList.remove('spinning');
+        document.getElementById('wheelResultName').textContent = chosenWheelMeal.name;
+        document.getElementById('wheelResultSpoons').textContent = `🥄 ${chosenWheelMeal.spoons} Spoon • ${chosenWheelMeal.time} min`;
+        document.getElementById('wheelResultDesc').textContent = `Ingredients: ${chosenWheelMeal.ingredients.join(', ')}`;
+        document.getElementById('wheelResultBox').classList.remove('hidden');
+        playChimeSound('complete');
+        triggerConfetti();
+      }, 2500);
+    }
+
+    function launchCookFromWheel() {
+      closePanicWheel();
+      if (chosenWheelMeal) {
+        startCookMode(chosenWheelMeal.id);
+      }
+    }
+
+    // ==========================================
+    // 10. SAFE FOODS & SENSORY VAULT
+    // ==========================================
+    let activeSensoryFilter = 'all';
+
+    function filterSafeFoods(category) {
+      activeSensoryFilter = category;
+      document.querySelectorAll('.sensory-btn').forEach(b => {
+        b.className = 'sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-card text-theme-text hover:bg-theme-cardSub border border-theme-border';
+      });
+      event.target.className = 'sensory-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-theme-cardSub text-theme-accent border border-theme-border';
+      playChimeSound('click');
+      renderSafeFoods();
+    }
+
+    function renderSafeFoods() {
+      const container = document.getElementById('safeFoodsGrid');
+      container.innerHTML = '';
+
+      let list = state.meals.filter(m => m.isSafe);
+      if (activeSensoryFilter !== 'all') {
+        list = list.filter(m => m.category === activeSensoryFilter);
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="col-span-3 p-6 text-center text-xs text-theme-textMuted bg-theme-card rounded-2xl border border-theme-border">No safe foods match this filter.</div>`;
+        return;
+      }
+
+      list.forEach(m => {
+        const card = createMealCardElement(m);
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function toggleSafeFoodStarred(id) {
+      const m = state.meals.find(item => item.id === id);
+      if (m) {
+        m.isSafe = !m.isSafe;
+        saveState();
+        playChimeSound('step');
+        renderTodayMeals();
+        renderSafeFoods();
+      }
+    }
+
+    // ==========================================
+    // 11. WEEKLY MEAL BOARD
+    // ==========================================
+    function renderWeeklyPlan() {
+      const container = document.getElementById('weeklyMealDaysList');
+      container.innerHTML = '';
+
+      state.weeklyPlan.forEach(entry => {
+        const meal = state.meals.find(m => m.id === entry.mealId) || state.meals[0];
+        const card = document.createElement('div');
+        card.className = 'bg-theme-card p-4 rounded-2xl border border-theme-border shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3';
+        
+        card.innerHTML = `
+          <div class="flex items-start sm:items-center space-x-3">
+            <div class="px-3 py-2 rounded-xl bg-theme-cardSub text-theme-accent font-black text-xs sm:text-sm font-mono border border-theme-border shrink-0">
+              ${entry.day.toUpperCase()}
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h4 class="text-xs sm:text-sm font-bold text-theme-text">${meal.name}</h4>
+                <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-theme-bg text-theme-accent border border-theme-border">🥄 ${meal.spoons}</span>
+              </div>
+              <p class="text-[11px] text-theme-textMuted mt-0.5">⏱️ ${meal.time}m • ${meal.ingredients.join(', ')}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 self-end sm:self-auto">
+            <select onchange="changeWeeklyDayMeal('${entry.day}', this.value)" class="bg-theme-bg border border-theme-border text-theme-text text-xs rounded-xl px-2.5 py-1.5 font-medium focus:outline-none cursor-pointer max-w-[150px] sm:max-w-[200px] truncate">
+              ${state.meals.map(m => `<option value="${m.id}" ${m.id === meal.id ? 'selected' : ''}>${m.name} (🥄${m.spoons})</option>`).join('')}
+            </select>
+            <button onclick="startCookMode('${meal.id}')" class="btn-tactile px-3 py-1.5 rounded-xl bg-theme-accent hover:bg-theme-accentHover text-white text-xs font-bold shadow-xs">
+              Cook
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function changeWeeklyDayMeal(day, newMealId) {
+      const entry = state.weeklyPlan.find(d => d.day === day);
+      if (entry) {
+        entry.mealId = newMealId;
+        saveState();
+        playChimeSound('step');
+        renderWeeklyPlan();
+      }
+    }
+
+    function randomizeWeeklyPlan() {
+      state.weeklyPlan.forEach(d => {
+        const randomMeal = state.meals[Math.floor(Math.random() * state.meals.length)];
+        d.mealId = randomMeal.id;
+      });
+      saveState();
+      playChimeSound('complete');
+      triggerConfetti();
+      renderWeeklyPlan();
+    }
+
+    // ==========================================
+    // 12. PANTRY & "COOK WHAT I HAVE" MATCHER
+    // ==========================================
+    function renderPantry() {
+      // 1. Clickable Chips
+      const chipContainer = document.getElementById('pantryIngredientChips');
+      chipContainer.innerHTML = '';
+      
+      const allIngredients = ['Bread', 'Cheddar Cheese', 'Eggs', 'Pasta', 'Baked Beans', 'Milk', 'Banana', 'Peanut Butter', 'Frozen Peas', 'Chicken Nuggets', 'Tortillas', 'Ramen', 'Tuna', 'Spinach'];
+      
+      allIngredients.forEach(ing => {
+        const isSelected = state.pantrySelectedIngredients.includes(ing);
+        const btn = document.createElement('button');
+        btn.className = `btn-tactile px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+          isSelected 
+            ? 'bg-theme-accent text-white border-theme-accent shadow-xs' 
+            : 'bg-theme-card text-theme-text border-theme-border hover:bg-theme-cardSub'
+        }`;
+        btn.innerHTML = `${isSelected ? '✓ ' : '+ '}${ing}`;
+        btn.onclick = () => togglePantryIngredient(ing);
+        chipContainer.appendChild(btn);
+      });
+
+      // 2. Filter matched meals
+      const matchedContainer = document.getElementById('pantryMatchedMealsGrid');
+      matchedContainer.innerHTML = '';
+      
+      const sel = state.pantrySelectedIngredients.map(s => s.toLowerCase());
+      const matched = state.meals.filter(meal => {
+        const mealIngs = meal.ingredients.map(i => i.toLowerCase());
+        return mealIngs.some(i => sel.some(s => i.includes(s)));
+      });
+
+      document.getElementById('matchedRecipeCount').textContent = `${matched.length} recipes matched`;
+
+      if (matched.length === 0) {
+        matchedContainer.innerHTML = `<div class="col-span-3 p-4 text-center text-xs text-theme-textMuted bg-theme-card rounded-2xl border border-theme-border">Tap ingredients above to see matching recipes!</div>`;
+      } else {
+        matched.forEach(m => {
+          const card = createMealCardElement(m);
+          matchedContainer.appendChild(card);
+        });
+      }
+
+      // 3. Full Pantry List
+      const fullList = document.getElementById('fullPantryList');
+      fullList.innerHTML = '';
+      state.pantry.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'py-2.5 flex items-center justify-between text-xs';
+        row.innerHTML = `
+          <div>
+            <span class="font-bold text-theme-text">${item.name}</span>
+            <span class="text-[10px] text-theme-textMuted ml-2">(${item.category})</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span class="font-mono text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Expires ${item.expiry}</span>
+            <button onclick="deletePantryItem('${item.id}')" class="text-theme-textMuted hover:text-rose-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>
+        `;
+        fullList.appendChild(row);
+      });
+      lucide.createIcons();
+    }
+
+    function togglePantryIngredient(ing) {
+      if (state.pantrySelectedIngredients.includes(ing)) {
+        state.pantrySelectedIngredients = state.pantrySelectedIngredients.filter(i => i !== ing);
+      } else {
+        state.pantrySelectedIngredients.push(ing);
+      }
+      saveState();
+      playChimeSound('click');
+      renderPantry();
+    }
+
+    function clearPantrySelections() {
+      state.pantrySelectedIngredients = [];
+      saveState();
+      playChimeSound('click');
+      renderPantry();
+    }
+
+    function deletePantryItem(id) {
+      state.pantry = state.pantry.filter(p => p.id !== id);
+      saveState();
+      renderPantry();
+    }
+
+    // ==========================================
+    // 13. GROCERY LIST BY STORE AISLE
+    // ==========================================
+    const AISLE_ORDER = ['Produce', 'Dairy & Eggs', 'Bakery', 'Pantry Staples', 'Frozen', 'Snacks & Drinks', 'Other'];
+
+    function renderGroceryList() {
+      const container = document.getElementById('groceryAislesContainer');
+      container.innerHTML = '';
+
+      AISLE_ORDER.forEach(aisle => {
+        const items = state.grocery.filter(g => g.aisle === aisle);
+        if (items.length === 0) return;
+
+        const card = document.createElement('div');
+        card.className = 'bg-theme-card p-4 rounded-2xl border border-theme-border shadow-xs space-y-2.5';
+        
+        let aisleEmoji = '🛒';
+        if (aisle === 'Produce') aisleEmoji = '🥦';
+        else if (aisle === 'Dairy & Eggs') aisleEmoji = '🧀';
+        else if (aisle === 'Bakery') aisleEmoji = '🍞';
+        else if (aisle === 'Pantry Staples') aisleEmoji = '🥫';
+        else if (aisle === 'Frozen') aisleEmoji = '❄️';
+        else if (aisle === 'Snacks & Drinks') aisleEmoji = '🥨';
+
+        let itemsHTML = '';
+        items.forEach(item => {
+          itemsHTML += `
+            <div class="flex items-center justify-between p-2 rounded-xl bg-theme-bg border border-theme-border ${item.done ? 'opacity-50 line-through bg-theme-cardSub' : ''}">
+              <label class="flex items-center space-x-2 text-xs text-theme-text font-medium cursor-pointer flex-1">
+                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleGroceryDone('${item.id}')" class="w-4 h-4 accent-blue-600 rounded cursor-pointer">
+                <span>${item.name}</span>
+              </label>
+              <button onclick="deleteGroceryItem('${item.id}')" class="text-theme-textMuted hover:text-rose-500 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-theme-border pb-1.5">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-theme-text flex items-center">
+              <span class="mr-1.5">${aisleEmoji}</span> ${aisle}
+            </h4>
+            <span class="text-[10px] font-bold text-theme-textMuted font-mono">${items.filter(i => i.done).length}/${items.length}</span>
+          </div>
+          <div class="space-y-1.5">${itemsHTML}</div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function toggleGroceryDone(id) {
+      const item = state.grocery.find(g => g.id === id);
+      if (item) {
+        item.done = !item.done;
+        saveState();
+        if (item.done) playChimeSound('step');
+        renderGroceryList();
+        renderTodayMeals();
+      }
+    }
+
+    function addGroceryItem(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('newGroceryName');
+      const aisleInput = document.getElementById('newGroceryAisle');
+      
+      state.grocery.push({
+        id: 'g-' + Date.now(),
+        name: nameInput.value.trim(),
+        aisle: aisleInput.value,
+        done: false
+      });
+
+      nameInput.value = '';
+      saveState();
+      playChimeSound('step');
+      renderGroceryList();
+      renderTodayMeals();
+    }
+
+    function deleteGroceryItem(id) {
+      state.grocery = state.grocery.filter(g => g.id !== id);
+      saveState();
+      renderGroceryList();
+      renderTodayMeals();
+    }
+
+    function clearCheckedGrocery() {
+      state.grocery = state.grocery.filter(g => !g.done);
+      saveState();
+      playChimeSound('click');
+      renderGroceryList();
+      renderTodayMeals();
+    }
+
+    // ==========================================
+    // 14. SETTINGS & THEME PICKER
+    // ==========================================
+    function renderThemePicker() {
+      const container = document.getElementById('themePickerGrid');
+      container.innerHTML = '';
+
+      THEMES.forEach(t => {
+        const isSelected = state.theme === t.id;
+        const card = document.createElement('div');
+        card.className = `btn-tactile p-3 rounded-2xl border text-center cursor-pointer transition ${
+          isSelected 
+            ? 'bg-theme-cardSub border-theme-accent ring-2 ring-theme-accent shadow-xs' 
+            : 'bg-theme-bg border-theme-border hover:bg-theme-cardSub'
+        }`;
+        card.onclick = () => changeTheme(t.id);
+        card.innerHTML = `
+          <div class="text-2xl mb-1">${t.emoji}</div>
+          <div class="text-xs font-black text-theme-text">${t.name}</div>
+          <div class="text-[10px] text-theme-textMuted mt-0.5">${t.desc}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 15. MODAL HELPERS & CUSTOM RECIPE CREATION
+    // ==========================================
+    function openAddMealModal() {
+      document.getElementById('addMealModal').classList.remove('hidden');
+      playChimeSound('click');
+      lucide.createIcons();
+    }
+
+    function closeAddMealModal() {
+      document.getElementById('addMealModal').classList.add('hidden');
+    }
+
+    function saveCustomMeal(e) {
+      e.preventDefault();
+      const name = document.getElementById('formMealName').value.trim();
+      const spoons = parseInt(document.getElementById('formMealSpoons').value);
+      const time = parseInt(document.getElementById('formMealTime').value) || 10;
+      const category = document.getElementById('formMealCategory').value;
+      const ingStr = document.getElementById('formMealIngredients').value.trim();
+      const stepsStr = document.getElementById('formMealSteps').value.trim();
+      const isSafe = document.getElementById('formMealIsSafe').checked;
+
+      const ingredients = ingStr.split(',').map(s => s.trim()).filter(Boolean);
+      const steps = stepsStr.split('\n').map(s => s.trim()).filter(Boolean);
+
+      const newMeal = {
+        id: 'm-' + Date.now(),
+        name,
+        spoons,
+        time,
+        category,
+        isSafe,
+        ingredients,
+        steps: steps.length > 0 ? steps : ['Cook and assemble ingredients', 'Serve and enjoy!']
+      };
+
+      state.meals.unshift(newMeal);
+      saveState();
+      playChimeSound('complete');
+      triggerConfetti();
+      closeAddMealModal();
+      renderAll();
+      alert(`🎉 Added "${name}" to your recipe vault!`);
+    }
+
+    function openAddPantryModal() {
+      document.getElementById('addPantryModal').classList.remove('hidden');
+      document.getElementById('pantryItemExpiry').value = getFutureDateStr(7);
+      playChimeSound('click');
+      lucide.createIcons();
+    }
+
+    function closeAddPantryModal() {
+      document.getElementById('addPantryModal').classList.add('hidden');
+    }
+
+    function savePantryItem(e) {
+      e.preventDefault();
+      const name = document.getElementById('pantryItemName').value.trim();
+      const category = document.getElementById('pantryItemCat').value;
+      const expiry = document.getElementById('pantryItemExpiry').value || getFutureDateStr(7);
+
+      state.pantry.unshift({
+        id: 'p-' + Date.now(),
+        name,
+        category,
+        expiry
+      });
+
+      document.getElementById('pantryItemName').value = '';
+      saveState();
+      playChimeSound('step');
+      closeAddPantryModal();
+      renderPantry();
+      renderTodayMeals();
+    }
+
+    // ==========================================
+    // 16. DATA BACKUP & CSV EXPORT
+    // ==========================================
+    function exportDataJSON() {
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(state, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute('href', dataStr);
+      a.setAttribute('download', `neurokitchen_backup_${new Date().toISOString().split('T')[0]}.json`);
+      a.click();
+    }
+
+    function importDataJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const imported = JSON.parse(event.target.result);
+          if (imported.meals && imported.pantry) {
+            state = imported;
+            saveState();
+            applyTheme(state.theme || 'honey');
+            renderAll();
+            alert('✅ Backup restored successfully!');
+          }
+        } catch(err) {
+          alert('❌ Error reading backup file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function exportMealsCSV() {
+      let csv = 'ID,Meal Name,Spoons,Time (min),Category,Is Starred Safe Food,Ingredients\n';
+      state.meals.forEach(m => {
+        csv += `"${m.id}","${m.name}",${m.spoons},${m.time},"${m.category}",${m.isSafe},"${m.ingredients.join(', ')}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'neurokitchen_meals.csv';
+      a.click();
+    }
+
+    function exportGroceryCSV() {
+      let csv = 'Item Name,Aisle Section,Purchased\n';
+      state.grocery.forEach(g => {
+        csv += `"${g.name}","${g.aisle}",${g.done}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'neurokitchen_grocery_list.csv';
+      a.click();
+    }
+
+    function resetToFactoryDefault() {
+      if (confirm('Reset everything to factory defaults? All custom recipes and tasks will be reset.')) {
+        initStateDefaults();
+        applyTheme('matcha');
+        renderAll();
+        alert('Reset complete!');
+      }
+    }
+
+    // ==========================================
+    // 17. PRINT SYSTEM (A4 / LETTER)
+    // ==========================================
+    function printWeeklyPlan() {
+      const printBody = document.getElementById('printBodyContent');
+      document.getElementById('printDateDisplay').textContent = new Date().toLocaleDateString('en-US', { dateStyle: 'full' });
+      
+      let html = '<h2 class="text-lg font-bold mb-2">Weekly Low-Spoon Meal Schedule:</h2><div class="space-y-2">';
+      state.weeklyPlan.forEach(d => {
+        const m = state.meals.find(meal => meal.id === d.mealId) || state.meals[0];
+        html += `
+          <div class="border-b border-gray-300 pb-1 flex justify-between">
+            <div><strong>${d.day.toUpperCase()}</strong>: ${m.name} (🥄 ${m.spoons} Spoons • ${m.time}m)</div>
+            <div class="text-xs text-gray-500">${m.ingredients.join(', ')}</div>
+          </div>
+        `;
+      });
+      html += '</div>';
+
+      printBody.innerHTML = html;
+      window.print();
+    }
+
+    function printGroceryList() {
+      const printBody = document.getElementById('printBodyContent');
+      document.getElementById('printDateDisplay').textContent = new Date().toLocaleDateString('en-US', { dateStyle: 'full' });
+      
+      let html = '<h2 class="text-lg font-bold mb-2">Grocery List by Store Aisle:</h2><div class="grid grid-cols-2 gap-4 text-xs">';
+      AISLE_ORDER.forEach(aisle => {
+        const items = state.grocery.filter(g => g.aisle === aisle);
+        if (items.length === 0) return;
+        html += `
+          <div class="border border-gray-300 p-2 rounded">
+            <h3 class="font-bold border-b border-gray-200 pb-1 mb-1">${aisle}</h3>
+            <ul class="space-y-1">
+              ${items.map(i => `<li>[ ] ${i.name}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      });
+      html += '</div>';
+
+      printBody.innerHTML = html;
+      window.print();
+    }
+
+    // Confetti effect
+    function triggerConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 75,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    // ==========================================
+    // 18. MASTER RENDER & INIT
+    // ==========================================
+    function renderAll() {
+      renderSpoonSelectors();
+      renderTodayMeals();
+      renderWaterTracker();
+      renderDopamineTasks();
+      renderSafeFoods();
+      renderWeeklyPlan();
+      renderPantry();
+      renderGroceryList();
+      renderThemePicker();
+      updateAudioIcon();
+      lucide.createIcons();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+    });
+  </script>
+</body>
+</html>
